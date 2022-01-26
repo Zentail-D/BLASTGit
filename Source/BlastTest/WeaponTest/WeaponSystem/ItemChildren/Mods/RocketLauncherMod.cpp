@@ -74,7 +74,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 			
 		}
-		if (AmmoCount>0 && !bNeverDestroy)
+		if (AmmoCount>0)
 		{
 			AmmoCount--;
 		}

@@ -30,23 +30,25 @@ void UInventoryComponent::PickupItem(AItemParent* ItemToPickup)
 
 void UInventoryComponent::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
-    
 	//switch statement to handle which mod slot we actually have active right now
 	switch(ActiveModSlot)
 	{
 		case EModSlots::Ve_DEFAULT:	// if default mod is active then fire default mod
 			{
-				DefaultMod->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
+				if (DefaultMod)
+					DefaultMod->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
 				break;
 			}
 		case EModSlots::Ve_SLOT1:	// if slot 1 mod is active then fire default mod
 			{
-				ModSlot1->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
+				if (ModSlot1)
+					ModSlot1->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
 				break;
 			}
 		case EModSlots::Ve_SLOT2:	// if slot 2 mod is active then fire default mod
 			{
-				ModSlot2->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
+				if (ModSlot2)
+					ModSlot2->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
 				break;
 			}
 		default:
@@ -225,7 +227,12 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick Tick, FActor
 	case EModSlots::Ve_SLOT1:
 		{
 			if (ModSlot1)
+			{
 				ActiveModAmmoCount = FString::FromInt(ModSlot1->GetCurrentAmmoCount());
+				GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Blue, FVector(ModSlot1->bReadyToDestroy).ToString());
+	
+			}
+				
 			GEngine->AddOnScreenDebugMessage(-1, 0.01, FColor::Red, TEXT("updating mod slot 1 ammo"));
 			break;
 		}
@@ -307,13 +314,14 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 				if (!ModSlot1)	// if mod slot 1 is empty then add new mod to that slot
 				{
 					ModSlot1 = NewMod;
-					ModSlot1->bNeverDestroy = false;
+					ModSlot1->bNeverDestroy = true;
 					ModSlot1->SetInstigator(GetOwner()->GetInstigator());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
+					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString("pickup into slot 1"));
 				} else if (!ModSlot2)	// if mod slot 2 is empty then add new mod to that slot
 				{
 					ModSlot2 = NewMod;
-					ModSlot2->bNeverDestroy = false;
+					ModSlot2->bNeverDestroy = true;
 					ModSlot2->SetInstigator(GetOwner()->GetInstigator());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
 				} else
@@ -327,7 +335,7 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 				if (!ModSlot2)	// if mod slot 2 is empty then add new mod to that slot
 				{
 					ModSlot2 = NewMod;
-					ModSlot2->bNeverDestroy = false;
+					ModSlot2->bNeverDestroy = true;
 					ModSlot2->SetInstigator(GetOwner()->GetInstigator());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
 				} else
@@ -341,7 +349,7 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 				if (!ModSlot1)	// if mod slot 1 is empty then add new mod to that slot
 				{
 					ModSlot1 = NewMod;
-					ModSlot1->bNeverDestroy = false;
+					ModSlot1->bNeverDestroy = true;
 					ModSlot1->SetInstigator(GetOwner()->GetInstigator());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
 				} else

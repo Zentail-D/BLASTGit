@@ -32,10 +32,8 @@ void ALaserMod::Tick(float DeltaTime)
 	}
 	if(bLaserFiring)
 	{
-		if (!bNeverDestroy)
-		{
-			AmmoCount-=DeltaTime;	// since we're firing make sure to decrease our ammo
-		}
+		
+		AmmoCount-=DeltaTime;
 		
 		if(ProjectileVfxNiagaraComponent)	// if our component is valid
 		{

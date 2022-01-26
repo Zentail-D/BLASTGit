@@ -77,7 +77,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 			
 		}
 		
-		if(AmmoCount>0 && !bNeverDestroy)
+		if(AmmoCount>0)
 		{
 			AmmoCount--;
 		}
