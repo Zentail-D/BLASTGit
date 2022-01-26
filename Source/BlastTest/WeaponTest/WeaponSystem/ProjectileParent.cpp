@@ -86,6 +86,9 @@ void AProjectileParent::Tick(float DeltaTime)
 	{
 		Destroy();
 	}
-	//DrawDebugBox(GetWorld(),GetActorLocation(),CollisionComponent->GetScaledBoxExtent(),FColor::Green,false,0.1,0,3);
+	if(bShowDebugBox)
+	{
+		DrawDebugBox(GetWorld(),GetActorLocation(),CollisionComponent->GetScaledBoxExtent(),FColor::Green,false,0.1,0,3);
+	}
 }
 
