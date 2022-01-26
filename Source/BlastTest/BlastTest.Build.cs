@@ -33,7 +33,8 @@ public class BlastTest : ModuleRules
 			"BlastTest/WeaponTest",
 			"BlastTest/WeaponTest/WeaponSystem",
 			"BlastTest/WeaponTest/WeaponSystem/ItemChildren",
-			"BlastTest/WeaponTest/WeaponSystem/ItemChildren/Mods"
+			"BlastTest/WeaponTest/WeaponSystem/ItemChildren/Mods",
+			"BlastTest/Movement"
 		});
 		
 		

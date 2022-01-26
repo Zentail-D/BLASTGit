@@ -34,7 +34,11 @@ public:
 	*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = Movement)
 	UProjectileMovementComponent* ProjectileMovementComponent;
-
+	/**
+	 * Turns the debug box for the collision component on and off
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug Tools", meta = (AllowProtectedAccess = "true"))
+	bool bShowDebugBox;
 	/**
 	* Fires a projectile in the Direction of ShootDirection and at the initial speed in The ProjectileMovementComponent
 	* @param ShootDirection Direction the bullet needs to travel in
