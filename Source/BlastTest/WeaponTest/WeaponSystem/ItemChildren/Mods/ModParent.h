@@ -31,7 +31,7 @@ public:
 	 */
 	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName);
 
-	/**Inventory checks this boolean to see if the mod needs to be destoryed*/
+	/**Inventory checks this boolean to see if the mod needs to be destroyed*/
 	bool bReadyToDestroy = false;
 	/**
 	* @param CameraComponent - Reference to the owning players camera component
@@ -58,7 +58,7 @@ public:
 	FVector GetFireDirection(UCameraComponent* CameraComponent, UStaticMeshComponent* Muzzle) const;
 	
 	/** String that is what the mod type is
-	 * @return String will always be CammelCase
+	 * @return String will always be Camel Case
 	 */
 	virtual FString GetModTypeName();
 
@@ -169,5 +169,31 @@ protected:
 
 	/** Name of the character actor that owns this mod and is wanting to fire it right now */
 	FString OwnerName = "None";
+
+	/** ----- CUSTOM SCREEN SHAKE VARIABLES ----- **/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake", meta = (AllowProtectedAccess = "true"))
+	float OscillationDuration = 0.25f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake", meta = (AllowProtectedAccess = "true"))
+	float OscillationBlendInTime = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake", meta = (AllowProtectedAccess = "true"))
+	float OscillationBlendOutTime = 0.05f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
+	float MinPitchAmplitude = 5.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
+	float MaxPitchAmplitude = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
+	float MinPitchFrequency = 25.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
+	float MaxPitchFrequency = 35.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
+	float MinYawAmplitude = 5.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
+	float MaxYawAmplitude = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
+	float MinYawFrequency = 25.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
+	float MaxYawFrequency = 35.0f;
 	
 };

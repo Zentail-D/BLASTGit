@@ -83,7 +83,7 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 		}
 		
-		if (AmmoCount>0 && !bNeverDestroy)
+		if (AmmoCount>0)
 		{
 			AmmoCount--;
 		}
