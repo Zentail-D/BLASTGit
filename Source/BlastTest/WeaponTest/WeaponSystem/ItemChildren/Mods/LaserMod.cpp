@@ -113,11 +113,17 @@ void ALaserMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComp
 		PlayerCameraComponent=CameraComponent;
 	if(!PlayerMuzzleComponent)
 		PlayerMuzzleComponent=MuzzleLocation;
+	
 	// create our vfx component and point to to the correct location
-	ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),
-		ProjectileVFXNiagaraSystem,		// pass it our system
+	ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(ProjectileVFXNiagaraSystem,// pass it our system
+
+	
+		MuzzleLocation,		// pass it the component to attach to
+		NAME_None,//pass it the attach point name
 		MuzzleLocation->GetComponentLocation(),		// start point
-		GetFireDirection(CameraComponent, MuzzleLocation).Rotation());		// end point
+		GetFireDirection(CameraComponent, MuzzleLocation).Rotation(),// Rotation
+		EAttachLocation::SnapToTarget,//how strong it will be centered while moving
+		false);		//we destroy someWhere else, so leave as false
 }
 
 void ALaserMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)

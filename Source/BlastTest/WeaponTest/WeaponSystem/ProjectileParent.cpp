@@ -56,7 +56,7 @@ void AProjectileParent::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		if (GetInstigator())
 			Cast<ABlastTestCharacter>(GetInstigator())->OnProjectileHitEnemy();
 		
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit"));
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit Enemy"));
 		
 		AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(OtherActor);
 		if (Enemy)
