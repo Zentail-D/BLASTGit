@@ -20,9 +20,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInventoryComponent* PlayerInventory;
 
+<<<<<<< HEAD
 	//UPROPERTY(EditAnywhere)
 	//TSubclassOf<UCameraShake> MyShake;
 
+=======
+>>>>>>> main
 	/**Force the player to respawn by clicking button in editor*/
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Respawn")
 	void ForceRespawnPlayer();
