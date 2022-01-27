@@ -5,6 +5,7 @@
 
 #include "BlastTestCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "NetworkChar.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 ALaserMod::ALaserMod()
@@ -65,7 +66,7 @@ void ALaserMod::Tick(float DeltaTime)
 					{
 						// notify the player that we hit an enemy
 						if (GetInstigator())
-							Cast<ABlastTestCharacter>(GetInstigator())->OnProjectileHitEnemy();
+							Cast<ANetworkChar>(GetInstigator())->OnNotifyProjectileHitEnemy();
 						
 						AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(HitResult.Actor);
 						if (Enemy)

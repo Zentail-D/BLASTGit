@@ -4,6 +4,7 @@
 #include "WeaponTest/WeaponSystem/FlamethrowerProjectile.h"
 
 #include "BlastTestCharacter.h"
+#include "NetworkChar.h"
 
 AFlamethrowerProjectile::AFlamethrowerProjectile()
 {
@@ -94,7 +95,7 @@ void AFlamethrowerProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent
 	{
 		// notify the player that we hit an enemy
 		if (GetInstigator())
-			Cast<ABlastTestCharacter>(GetInstigator())->OnProjectileHitEnemy();
+			Cast<ANetworkChar>(GetInstigator())->OnNotifyProjectileHitEnemy();
 		//if(GEngine)
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit") + FString::FromInt(this->NumberOfHits));
 		AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(OtherActor);

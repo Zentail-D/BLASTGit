@@ -6,6 +6,7 @@
 #include "AIEnemyParent.h"
 #include "BlastTestCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "NetworkChar.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -46,7 +47,8 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		{
 			// notify the player that we hit an enemy
 			if (GetInstigator())
-				Cast<ABlastTestCharacter>(GetInstigator())->OnProjectileHitEnemy();
+				Cast<ANetworkChar>(GetInstigator())->OnNotifyProjectileHitEnemy();
+			
 			AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(OverlappedActor);
 			if (Enemy)
 			{

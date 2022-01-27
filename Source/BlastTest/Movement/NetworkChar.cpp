@@ -54,6 +54,11 @@ bool ANetworkChar::DealDamageToPlayer(float DamageToDeal)
 	return PlayerInventory->GetCurrentPlayerHealth()<=0.f;
 }
 
+void ANetworkChar::OnNotifyProjectileHitEnemy()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, FString("Hit"));
+}
+
 // Called every frame
 void ANetworkChar::Tick(float DeltaTime)
 {

@@ -49,6 +49,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool DealDamageToPlayer(float DamageToDeal);
 
+	/** method called by projectiles when they overlap with anything holding the enemy tag */
+	void OnNotifyProjectileHitEnemy();
+
 protected:	
 	/* Called when the game starts or when spawned **/
 	virtual void BeginPlay() override;

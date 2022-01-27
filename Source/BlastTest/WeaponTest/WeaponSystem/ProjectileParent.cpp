@@ -6,6 +6,7 @@
 #include "AIEnemyParent.h"
 #include "BlastTestCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "NetworkChar.h"
 
 // Sets default values
 AProjectileParent::AProjectileParent()
@@ -54,7 +55,7 @@ void AProjectileParent::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	{
 		// notify the player that we hit an enemy
 		if (GetInstigator())
-			Cast<ABlastTestCharacter>(GetInstigator())->OnProjectileHitEnemy();
+			Cast<ANetworkChar>(GetInstigator())->OnNotifyProjectileHitEnemy();
 		
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit Enemy"));
 		
