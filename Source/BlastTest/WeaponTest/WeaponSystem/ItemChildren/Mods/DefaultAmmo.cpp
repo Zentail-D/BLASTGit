@@ -62,6 +62,9 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 			ProjectileParent->SetOwnersName(OwnersName);
 			ProjectileParent->SetInstigator(GetInstigator());
 		}
+		// play our screen shake
+		PlayerCameraShake(ModFireShake);
+		
 	}
 }
 

@@ -74,7 +74,8 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 				ShotgunProjectile->SetDamageAmount(ProjectileDamage);
 				ShotgunProjectile->SetInstigator(GetInstigator());
 			}
-			
+			// play our screen shake
+			PlayerCameraShake(ModFireShake);
 		}
 		
 		if(AmmoCount>0)

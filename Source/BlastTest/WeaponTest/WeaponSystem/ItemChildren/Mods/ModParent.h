@@ -73,6 +73,14 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	/** Camera Shake Used When Firing the Mod */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
+	TSubclassOf<UMatineeCameraShake> ModFireShake;
+
+	/** Method that will call this given camera shake to play on the owning player
+	 *@param Shake - The matinee shake that needs to be set in blueprints
+	 */
+	void PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake);
 	/**
 	 * Boolean to Tell if the mod is ready to be fired
 	 */
