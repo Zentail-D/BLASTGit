@@ -43,4 +43,15 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	bool bIsCharging = false;
+
+	/** attribute used to increase overtime up to one for the scale of the charge screen shake */
+	float ChargeScale = 0.0f;
+
+	/** Value used to make the time needed for charge up screen shake to reach max shake either faster or slower */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
+	float ChargeScreenShakeRampUpScale = 2.0f;
+
+	/** Camera Shake Used When Charging the Mod */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
+	TSubclassOf<UMatineeCameraShake> ModChargeShake;
 };

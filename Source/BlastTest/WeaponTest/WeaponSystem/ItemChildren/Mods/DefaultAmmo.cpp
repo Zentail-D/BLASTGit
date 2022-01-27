@@ -3,6 +3,8 @@
 
 #include "WeaponTest/WeaponSystem/ItemChildren/Mods/DefaultAmmo.h"
 
+#include "NetworkChar.h"
+
 ADefaultAmmo::ADefaultAmmo()
 {
 	//set up defaults(can be overriden in blueprints)
@@ -31,6 +33,7 @@ void ADefaultAmmo::Tick(float DeltaTime)
 			RateOfFire=RateOfFireReset;
 		}
 	}
+	
 }
 
 void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName)
@@ -63,7 +66,7 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 			ProjectileParent->SetInstigator(GetInstigator());
 		}
 		// play our screen shake
-		PlayerCameraShake(ModFireShake);
+		PlayerCameraShake(ModFireShake, 1.0f);
 		
 	}
 }

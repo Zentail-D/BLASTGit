@@ -97,11 +97,10 @@ void AModParent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AModParent::PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake)
+void AModParent::PlayerCameraShake(const TSubclassOf<UMatineeCameraShake> Shake, const float Scale=1.0f) const
 {
 	if (!Shake)
 		return;		// if an invalid camera shake is given dont proceed
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString("shake"));
 
 	// for loop to go through the player controllers in the world
 	for( FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator )
@@ -109,7 +108,7 @@ void AModParent::PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake)
 		const ANetworkChar* Player = Cast<ANetworkChar>(Iterator->Get()->GetCharacter());	// get reference to player controlled by controller
 		if (Player->GetName() == GetInstigator()->GetName())	// if its the same as the owning character 
 		{
-			Iterator->Get()->PlayerCameraManager->StartMatineeCameraShake(Shake, 1.0f);	// play shake
+			Iterator->Get()->PlayerCameraManager->StartMatineeCameraShake(Shake, Scale);	// play shake
 		}
 	}
 }

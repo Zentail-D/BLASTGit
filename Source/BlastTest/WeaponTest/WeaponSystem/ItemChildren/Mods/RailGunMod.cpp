@@ -4,6 +4,7 @@
 #include "WeaponTest/WeaponSystem/ItemChildren/Mods/RailGunMod.h"
 
 #include "DrawDebugHelpers.h"
+#include "NetworkChar.h"
 
 ARailGunMod::ARailGunMod()
 {
@@ -18,6 +19,10 @@ void ARailGunMod::Tick(float DeltaTime)
 	if(!bReadyToFire && bIsCharging)
 	{
 		GEngine->AddOnScreenDebugMessage(-1,0.5f,FColor::Emerald,FString::SanitizeFloat(RateOfFire));
+		if(ChargeScale<1.0f)
+		{
+			ChargeScale += DeltaTime * ChargeScreenShakeRampUpScale;
+		}
 		if(RateOfFire>0.0f)
 		{
 			RateOfFire -= DeltaTime;
@@ -28,6 +33,9 @@ void ARailGunMod::Tick(float DeltaTime)
 			bReadyToFire = true;
 			RateOfFire = RateOfFireReset;
 		}
+		
+		if (Cast<ANetworkChar>(GetInstigator()))	// only run this when we have a valid instigator (aka the player is holding it)
+			PlayerCameraShake(ModChargeShake, ChargeScale);
 	}
 	if(AmmoCount<=0)
 	{
@@ -82,7 +90,8 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 			// we fire in direction after the actor is officially spawned
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 		}
-		
+		PlayerCameraShake(ModFireShake, 1.0f);	// make sure to play our camera shake fire
+		ChargeScale = 0.0f;		// make sure to reset the charge scale when we fire
 		if (AmmoCount>0)
 		{
 			AmmoCount--;

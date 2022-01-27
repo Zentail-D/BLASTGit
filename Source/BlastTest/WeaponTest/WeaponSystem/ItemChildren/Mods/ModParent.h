@@ -79,8 +79,9 @@ protected:
 
 	/** Method that will call this given camera shake to play on the owning player
 	 *@param Shake - The matinee shake that needs to be set in blueprints
+	 *@param Scale - 1.0 is default, >1 will scale the shake up and <1 will scale down. Can be used to give a kind of charge up effect.
 	 */
-	void PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake);
+	void PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake, float Scale) const;
 	/**
 	 * Boolean to Tell if the mod is ready to be fired
 	 */

@@ -2,6 +2,8 @@
 
 
 #include "WeaponTest/WeaponSystem/ItemChildren/Mods/ShotgunMod.h"
+
+#include "NetworkChar.h"
 #include "WeaponTest/WeaponSystem/ShotgunProjectile.h"
 
 AShotgunMod::AShotgunMod()
@@ -20,6 +22,7 @@ AShotgunMod::AShotgunMod()
 void AShotgunMod::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	if(!bReadyToFire)
 	{
 		if(RateOfFire>0.0f)
@@ -75,7 +78,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 				ShotgunProjectile->SetInstigator(GetInstigator());
 			}
 			// play our screen shake
-			PlayerCameraShake(ModFireShake);
+			PlayerCameraShake(ModFireShake, 1.0f);
 		}
 		
 		if(AmmoCount>0)
