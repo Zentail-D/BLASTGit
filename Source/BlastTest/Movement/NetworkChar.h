@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+#include "InventoryComponent.h"
 #include "GameFramework/Character.h"
 #include "ZoneTool/ZoneToolCon.h"
 #include "NetworkChar.generated.h"
@@ -20,12 +21,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInventoryComponent* PlayerInventory;
 
-<<<<<<< HEAD
-	//UPROPERTY(EditAnywhere)
-	//TSubclassOf<UCameraShake> MyShake;
-
-=======
->>>>>>> main
 	/**Force the player to respawn by clicking button in editor*/
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Respawn")
 	void ForceRespawnPlayer();
