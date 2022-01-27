@@ -34,7 +34,7 @@ void ALaserMod::Tick(float DeltaTime)
 	{
 		
 		AmmoCount-=DeltaTime;
-		
+		this->PlayerCameraShake(ModFireShake, 1.0f);
 		if(ProjectileVfxNiagaraComponent)	// if our component is valid
 		{
 			if(PlayerCameraComponent && PlayerMuzzleComponent)	// if we successfully retrieved the components from fire

@@ -96,7 +96,7 @@ void AFlameThrowerMod::Tick(float DeltaSeconds)
 	 */
 	if(bReadyToFire && bHoldingFireDown)
 	{
-		
+		this->PlayerCameraShake(ModFireShake, 1.0f);
 		if(GetWorld())
 		{
 			if(this->SavedCameraComponent)

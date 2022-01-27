@@ -74,6 +74,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 			
 		}
+		this->PlayerCameraShake(ModFireShake, 1.0f);
 		if (AmmoCount>0)
 		{
 			AmmoCount--;
