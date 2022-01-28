@@ -4,6 +4,7 @@
 #include "ModParent.h"
 #include "NetworkChar.h"
 #include "DrawDebugHelpers.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AModParent::AModParent()
 {
@@ -111,4 +112,45 @@ void AModParent::PlayerCameraShake(const TSubclassOf<UMatineeCameraShake> Shake,
 			Iterator->Get()->PlayerCameraManager->StartMatineeCameraShake(Shake, Scale);	// play shake
 		}
 	}
+}
+
+void AModParent::KnockBackPlayer(const float Force, const UCameraComponent* Camera)
+{
+	// grab our player reference and make sure its actually usable
+	const ANetworkChar* Player = Cast<ANetworkChar>(GetInstigator());
+	if (!Player || Force == 0.0f)	// if our force is zero then there is no point in continuing the method since nothing will happen
+	{
+		return;
+	}
+	FVector OppositeLookDir = -1*Camera->GetForwardVector().GetSafeNormal();
+	FVector KnockBackDir = FVector(OppositeLookDir.X, OppositeLookDir.Y, 0) * Force;
+	KnockBackDir += FVector(0, 0, VerticalKickBackComponent);
+	Player->GetCharacterMovement()->AddImpulse(KnockBackDir);
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, Player->GetCharacterMovement()->Velocity.ToString());
+	DrawDebugLine(GetWorld(), Player->GetActorLocation(), Player->GetActorLocation()+KnockBackDir, FColor::Red, false, 25.0f, -1, 3);
+
+	/*
+	// setup trace params and do trace strait down from the player, make sure to ignore self
+	FCollisionQueryParams TraceParams(FName(TEXT("Environment")), true, Player);
+	// initialize hit info
+	FHitResult HitResult;
+	// do trace
+	const bool HadHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		Player->GetActorLocation(),
+		Player->GetActorLocation()+FVector(0, 0, -300.0f),
+		ECC_Visibility,
+		TraceParams);
+
+	if (HadHit)
+	{
+		FVector Normal = HitResult.ImpactNormal;
+		FVector Perp = Normal.RightVector;
+		//DrawDebugLine(GetWorld(), HitResult.Location, HitResult.Location+Normal*500, FColor::Red, false, 25.0f, -1, 3);
+		//DrawDebugLine(GetWorld(), Player->GetActorLocation(), Player->GetActorLocation()+Perp*500, FColor::Red, false, 25.0f, -1, 3);
+	}
+	else	// this means we are probably in the air since the trace down didnt hit anything
+	{
+		
+	}*/
 }

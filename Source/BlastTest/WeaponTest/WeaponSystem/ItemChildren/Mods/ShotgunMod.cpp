@@ -79,6 +79,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 			}
 			// play our screen shake
 			PlayerCameraShake(ModFireShake, 1.0f);
+			KnockBackPlayer(ModFireKnockBackForce, CameraComponent);
 		}
 		
 		if(AmmoCount>0)

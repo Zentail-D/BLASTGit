@@ -73,15 +73,19 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	/** Float used to determine how hard the player is moved back when firing the Mod */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
+	float ModFireKnockBackForce = 0.0f;
+
+	/** Camera Shake Used When Firing the Mod */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
+	float VerticalKickBackComponent = 0.0f;
+	
 	/** Camera Shake Used When Firing the Mod */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
 	TSubclassOf<UMatineeCameraShake> ModFireShake;
-
-	/** Method that will call this given camera shake to play on the owning player
-	 *@param Shake - The matinee shake that needs to be set in blueprints
-	 *@param Scale - 1.0 is default, >1 will scale the shake up and <1 will scale down. Can be used to give a kind of charge up effect.
-	 */
-	void PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake, float Scale) const;
+	
 	/**
 	 * Boolean to Tell if the mod is ready to be fired
 	 */
@@ -179,30 +183,14 @@ protected:
 	/** Name of the character actor that owns this mod and is wanting to fire it right now */
 	FString OwnerName = "None";
 
-	/** ----- CUSTOM SCREEN SHAKE VARIABLES ----- **/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake", meta = (AllowProtectedAccess = "true"))
-	float OscillationDuration = 0.25f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake", meta = (AllowProtectedAccess = "true"))
-	float OscillationBlendInTime = 0.05f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake", meta = (AllowProtectedAccess = "true"))
-	float OscillationBlendOutTime = 0.05f;
+	/** Method that will call this given camera shake to play on the owning player
+	*@param Shake - The matinee shake that needs to be set in blueprints
+	*@param Scale - 1.0 is default, >1 will scale the shake up and <1 will scale down. Can be used to give a kind of charge up effect.
+	*/
+	void PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake, float Scale) const;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
-	float MinPitchAmplitude = 5.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
-	float MaxPitchAmplitude = 10.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
-	float MinPitchFrequency = 25.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Pitch Settings", meta = (AllowProtectedAccess = "true"))
-	float MaxPitchFrequency = 35.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
-	float MinYawAmplitude = 5.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
-	float MaxYawAmplitude = 10.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
-	float MinYawFrequency = 25.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Screen Shake | Yaw Settings", meta = (AllowProtectedAccess = "true"))
-	float MaxYawFrequency = 35.0f;
-	
+	/** Launches the player backwards based off the direction the player is looking
+	 * @param Force - How hard to move the player
+	 */
+	void KnockBackPlayer(const float Force, const UCameraComponent* Camera);
 };
