@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "Generator.generated.h"
 
@@ -26,8 +28,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> SpawnObject;
-	
-	FActorSpawnParameters SpawnPara;
 	
 protected:
 	// Called when the game starts or when spawned
