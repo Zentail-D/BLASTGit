@@ -49,6 +49,7 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 		bReadyToFire = false;
 		ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(),GetFireDirection(CameraComponent, MuzzleLocation).Rotation());
 		ProjectileVfxNiagaraComponent->SetFloatParameter("User.Lifetime",ProjectileLifeTime);
+		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
 		
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Instigator=GetInstigator();

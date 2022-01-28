@@ -78,9 +78,6 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 			{
 				UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
 			}
-			// set our initial and max speed of our projectile
-			ProjectileParent->ProjectileMovementComponent->InitialSpeed = ProjectileSpeed;
-			ProjectileParent->ProjectileMovementComponent->MaxSpeed = ProjectileSpeed;
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetOwnersName(OwnerName);
 			ProjectileParent->SetInstigator(GetInstigator());
