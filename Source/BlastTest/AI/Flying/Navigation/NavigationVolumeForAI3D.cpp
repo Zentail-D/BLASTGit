@@ -8,6 +8,8 @@
 #include <set>
 #include <unordered_map>
 
+#include "DrawDebugHelpers.h"
+
 static UMaterial* GridMaterial = nullptr;
 
 // Sets default values
@@ -136,10 +138,7 @@ bool ANavigationVolumeForAI3D::FindPath(const FVector& start, const FVector& des
 {
 	// Clear the out path
 	out_path.Empty();
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow,
-	//	FString::Printf(TEXT("find path")));
-	// set for the incomplete path
-	TArray<FVector> myIncompletePath;
+	
 	// NodeCompare is what is used to sort this multiset from lowest FScore to highest FScore
 	std::multiset<NavigationNode*, NodeCompare> openSet;
 	// cameFrom is a map of nodes that indicate <Node that was visited next , Current node>
@@ -174,6 +173,10 @@ bool ANavigationVolumeForAI3D::FindPath(const FVector& start, const FVector& des
 	openSet.insert(startNode);
 	gScores[startNode] = 0.0f;
 
+	float bestScore=0;
+	NavigationNode* BestNeighborScore=nullptr;
+	int NeighborsChecked=0;
+
 	// main loop for finding a complete path
 	while (openSet.empty() == false)
 	{
@@ -205,28 +208,43 @@ bool ANavigationVolumeForAI3D::FindPath(const FVector& start, const FVector& des
 		}
 
 		openSet.erase(openSet.begin());
-		//from what i can tell this for loop bascially loops through all the neightbors of the
-		//the current node and weights them based on their distance to the end
-		for (NavigationNode* neighbor : current->Neighbors)
+
+		if(NeighborsChecked>=NeighborsToCheck)
 		{
-			// this gScore is representative of the "greatest" score
-			const float tentative_gScore = gScore(current) + distance(current, neighbor);
-			// trying to find the best scores, aka go in the direction of the end node
-			if (tentative_gScore < gScore(neighbor))
+			openSet.clear();
+		}
+		else
+		{
+			//from what i can tell this for loop bascially loops through all the neightbors of the
+			//the current node and weights them based on their distance to the end
+			for (NavigationNode* neighbor : current->Neighbors)
 			{
-				TArray<AActor*> outActors;
-				const FVector worldLocation = ConvertCoordinatesToLocation(neighbor->Coordinates);
-				// checks to see if the next node being checked is inside of something
-				bool traversable = !(UKismetSystemLibrary::BoxOverlapActors(GWorld, worldLocation, FVector(GetDivisionSize() / 2.0f), object_types, actor_class_filter, TArray<AActor*>(), outActors));
-				if (traversable == true)
+			
+				// this gScore is representative of the "greatest" score
+				const float tentative_gScore = gScore(current) + distance(current, neighbor);
+				// trying to find the best scores, aka go in the direction of the end node
+				if (tentative_gScore < gScore(neighbor))
 				{
-					cameFrom[neighbor] = current;
-					gScores[neighbor] = tentative_gScore;
-					const float fScore = tentative_gScore + h(neighbor);
-					neighbor->FScore = fScore;
-					openSet.insert(neighbor);
+					TArray<AActor*> outActors;
+					const FVector worldLocation = ConvertCoordinatesToLocation(neighbor->Coordinates);
+					// checks to see if the next node being checked is inside of something
+					bool traversable = !(UKismetSystemLibrary::BoxOverlapActors(GWorld, worldLocation, FVector(GetDivisionSize() / 2.0f), object_types, actor_class_filter, TArray<AActor*>(), outActors));
+					if (traversable == true)
+					{
+						cameFrom[neighbor] = current;
+						gScores[neighbor] = tentative_gScore;
+						const float fScore = tentative_gScore + h(neighbor);
+						neighbor->FScore = fScore;
+						openSet.insert(neighbor);
+						if(tentative_gScore>bestScore)
+						{
+							bestScore=tentative_gScore;
+							BestNeighborScore=neighbor;
+						}
+					}
 				}
 			}
+			NeighborsChecked++;
 		}
 	}
 	// this section is dedicated to creating the incomplete path for the AI if it cant reach its goal
@@ -235,7 +253,7 @@ bool ANavigationVolumeForAI3D::FindPath(const FVector& start, const FVector& des
 		// this uses basically the same algorithm for creating the out_path as is used when the
 		// end point is reached
 		auto current_it = cameFrom.begin();
-		NavigationNode* current = current_it->first;
+		NavigationNode* current = BestNeighborScore;
 		out_path.Add(ConvertCoordinatesToLocation(current->Coordinates));
 		while (true)
 		{

@@ -38,6 +38,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "NavigationVolume3D|Pathfinding", meta = (AllowPrivateAccess = "true", ClampMin = 1))
 	int32 DivisionsZ = 10;
 
+	/** When running the find path function. This values how many times to go into checking the neighbors before giving up. This is how many cubes the algorithm can search away from it's start location*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "NavigationVolume3D|Pathfinding", meta = (AllowPrivateAccess = "true", ClampMin = 1))
+	int32 NeighborsToCheck=10;
+	
 	/** The size of each division */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "NavigationVolume3D|Pathfinding", meta = (AllowPrivateAccess = "true", ClampMin = 1))
 	float DivisionSize = 100.0f;
