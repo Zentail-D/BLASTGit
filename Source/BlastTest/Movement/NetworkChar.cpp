@@ -69,6 +69,7 @@ void ANetworkChar::Tick(float DeltaTime)
 		//GEngine->AddOnScreenDebugMessage(-1,.4,FColor::Red,TEXT("I'm a dead bitch"));
 		// our health has dropped below zero so wer respawn now
 		RespawnPlayer();
+		
 	}
 
 }

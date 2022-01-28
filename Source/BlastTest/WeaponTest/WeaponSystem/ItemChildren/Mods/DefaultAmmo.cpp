@@ -67,7 +67,7 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 		}
 		// play our screen shake
 		PlayerCameraShake(ModFireShake, 1.0f);
-		KnockBackPlayer(ModFireKnockBackForce, CameraComponent);
+		//KnockBackPlayer(ModFireKnockBackForce, CameraComponent);
 	}
 }
 

@@ -117,14 +117,16 @@ void AModParent::PlayerCameraShake(const TSubclassOf<UMatineeCameraShake> Shake,
 void AModParent::KnockBackPlayer(const float Force, const UCameraComponent* Camera)
 {
 	// grab our player reference and make sure its actually usable
-	const ANetworkChar* Player = Cast<ANetworkChar>(GetInstigator());
+	ANetworkChar* Player = Cast<ANetworkChar>(GetInstigator());
 	if (!Player || Force == 0.0f)	// if our force is zero then there is no point in continuing the method since nothing will happen
 	{
 		return;
 	}
-	FVector OppositeLookDir = -1*Camera->GetForwardVector().GetSafeNormal();
-	FVector KnockBackDir = FVector(OppositeLookDir.X, OppositeLookDir.Y, 0) * Force;
-	KnockBackDir += FVector(0, 0, VerticalKickBackComponent);
+	//Player->GetCharacterMovement()->AddImpulse(FVector(0, 0, VerticalKickBackComponent));
+	//Player->SetActorLocation(Player->GetActorLocation() + FVector(0, 0, 10));
+	const FVector OppositeLookDir = -1*Camera->GetForwardVector().GetSafeNormal();
+	FVector KnockBackDir = FVector(OppositeLookDir.X, OppositeLookDir.Y, 0).GetSafeNormal() * Force;
+	KnockBackDir += FVector(0,0,VerticalKickBackComponent);
 	Player->GetCharacterMovement()->AddImpulse(KnockBackDir);
 	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, Player->GetCharacterMovement()->Velocity.ToString());
 	DrawDebugLine(GetWorld(), Player->GetActorLocation(), Player->GetActorLocation()+KnockBackDir, FColor::Red, false, 25.0f, -1, 3);
