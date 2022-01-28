@@ -177,7 +177,6 @@ bool ANavigationVolumeForAI3D::FindPath(const FVector& start, const FVector& des
 	NavigationNode* BestNeighborScore=nullptr;
 	int NeighborsChecked=0;
 
-	GEngine->AddOnScreenDebugMessage(-1,1.5,FColor::Red,FVector(NeighborsToCheck).ToString());
 	// main loop for finding a complete path
 	while (openSet.empty() == false)
 	{
@@ -247,10 +246,6 @@ bool ANavigationVolumeForAI3D::FindPath(const FVector& start, const FVector& des
 			}
 			NeighborsChecked++;
 		}
-	}
-	if(BestNeighborScore)
-	{
-		DrawDebugSphere(GetWorld(),ConvertCoordinatesToLocation(BestNeighborScore->Coordinates),20,4,FColor::Red,false,4,0,3);
 	}
 	// this section is dedicated to creating the incomplete path for the AI if it cant reach its goal
 	if (!cameFrom.empty())
