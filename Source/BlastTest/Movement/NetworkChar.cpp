@@ -54,6 +54,11 @@ bool ANetworkChar::DealDamageToPlayer(float DamageToDeal)
 	return PlayerInventory->GetCurrentPlayerHealth()<=0.f;
 }
 
+void ANetworkChar::OnNotifyProjectileHitEnemy()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, FString("Hit"));
+}
+
 // Called every frame
 void ANetworkChar::Tick(float DeltaTime)
 {
@@ -64,6 +69,7 @@ void ANetworkChar::Tick(float DeltaTime)
 		//GEngine->AddOnScreenDebugMessage(-1,.4,FColor::Red,TEXT("I'm a dead bitch"));
 		// our health has dropped below zero so wer respawn now
 		RespawnPlayer();
+		
 	}
 
 }

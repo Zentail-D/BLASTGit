@@ -53,6 +53,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 		//test
 		ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(),CameraComponent->GetComponentRotation());
 		ProjectileVfxNiagaraComponent->SetFloatParameter("User.Lifetime",ProjectileLifeTime);
+		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
 		
 		ARocketProjectile* ProjectileParent = GetWorld()->SpawnActorDeferred<ARocketProjectile>(ProjectileClass, CameraComponent->GetComponentTransform(), GetOwner(), GetInstigator());
 		
@@ -74,6 +75,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 			
 		}
+		this->PlayerCameraShake(ModFireShake, 1.0f);
 		if (AmmoCount>0)
 		{
 			AmmoCount--;

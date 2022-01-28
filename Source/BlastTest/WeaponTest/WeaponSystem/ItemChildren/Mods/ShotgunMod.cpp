@@ -55,6 +55,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 		ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(),CameraComponent->GetComponentRotation());
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Angle",CameraComponent->GetComponentRotation().Vector());
 		ProjectileVfxNiagaraComponent->SetFloatParameter("User.Lifetime",ProjectileLifeTime);
+		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Instigator=GetInstigator();
 		//spawn each projectile collision box
@@ -79,6 +80,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 			}
 			// play our screen shake
 			PlayerCameraShake(ModFireShake, 1.0f);
+			//KnockBackPlayer(ModFireKnockBackForce, CameraComponent);
 		}
 		
 		if(AmmoCount>0)

@@ -15,9 +15,6 @@ AGenerator::AGenerator()
 	CurrentTime = 0.0;	
 	IsActive = false;
 	SpawnObject = nullptr;
-
-	
-	SpawnPara.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +34,8 @@ void AGenerator::Tick(float DeltaTime)
 		if(CurrentTime >= TimeToGenerate)
 		{
 			SpawnScoreObject();
+			IsActive = false;
+			CurrentTime = 0;
 		}
 	}
 }
@@ -50,7 +49,11 @@ void AGenerator::SpawnScoreObject()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, FString::Printf(TEXT("SpawnScoreObject")));
 	
-	//GetWorld()->SpawnActor<Actor>(SpawnObject, GetActorLocation(),FRotator(0,0,0),SpawnPara);
+	FActorSpawnParameters SpawnPara;
+	SpawnPara.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FVector Location = this->GetActorLocation();
+	Location.X += 100; 
+	GetWorld()->SpawnActor<AActor>(SpawnObject, Location,FRotator(0,0,0),SpawnPara);
 }
 
 
