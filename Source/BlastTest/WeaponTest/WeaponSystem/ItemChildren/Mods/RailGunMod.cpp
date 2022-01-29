@@ -89,7 +89,7 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 		}
 		PlayerCameraShake(ModFireShake, 1.0f);	// make sure to play our camera shake fire
 		ChargeScale = 0.0f;		// make sure to reset the charge scale when we fire
-		if (AmmoCount>0)
+		if (AmmoCount>0 && !bIsDefaultMod)
 		{
 			AmmoCount--;
 		}

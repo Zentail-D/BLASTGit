@@ -76,7 +76,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 			
 		}
 		this->PlayerCameraShake(ModFireShake, 1.0f);
-		if (AmmoCount>0)
+		if (AmmoCount>0 && !bIsDefaultMod)
 		{
 			AmmoCount--;
 		}

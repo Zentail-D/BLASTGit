@@ -112,7 +112,8 @@ void AFlameThrowerMod::Tick(float DeltaSeconds)
 					OurFlameProjectile->SetLifeSpan(ProjectileLifeTime);
 					OurFlameProjectile->SetInstigator(GetInstigator());
 
-					this->AmmoCount -= 1;
+					if (!bIsDefaultMod)
+						this->AmmoCount -= 1;
 					this->RateOfFlames = this->RateOfFlamesReset;
 				}
 			}

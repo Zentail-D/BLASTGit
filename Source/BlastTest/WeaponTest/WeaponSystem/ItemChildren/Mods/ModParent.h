@@ -71,17 +71,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Item Settings", meta= (AllowProtectedAccess= "true"))
 	UStaticMeshComponent* MeshComponent;
 
+	/** boolean used to determine weather the mod is default. If so we dont take away from its ammo */
+	bool bIsDefaultMod = false;
+
 protected:
 	virtual void BeginPlay() override;
 
-	/** Float used to determine how hard the player is moved back when firing the Mod */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
-	float ModFireKnockBackForce = 0.0f;
-
-	/** Camera Shake Used When Firing the Mod */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
-	float VerticalKickBackComponent = 0.0f;
-	
 	/** Camera Shake Used When Firing the Mod */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Camera Shake", meta = (AllowProtectedAccess = "true"))
 	TSubclassOf<UMatineeCameraShake> ModFireShake;
@@ -189,8 +184,4 @@ protected:
 	*/
 	void PlayerCameraShake(TSubclassOf<UMatineeCameraShake> Shake, float Scale) const;
 
-	/** Launches the player backwards based off the direction the player is looking
-	 * @param Force - How hard to move the player
-	 */
-	void KnockBackPlayer(const float Force, const UCameraComponent* Camera);
 };

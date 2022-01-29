@@ -125,6 +125,7 @@ protected:
 	void PickupMod(AModParent* NewMod);
 
 	/** this is essentially our win condition, how many generator points the player has */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Inventory")
 	int CurrentNumOfGeneratorPoints = 0;
 
 	/**

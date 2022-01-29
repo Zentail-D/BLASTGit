@@ -33,8 +33,8 @@ void ALaserMod::Tick(float DeltaTime)
 	}
 	if(bLaserFiring)
 	{
-		
-		AmmoCount-=DeltaTime;
+		if (!bIsDefaultMod)
+			AmmoCount-=DeltaTime;
 		this->PlayerCameraShake(ModFireShake, 1.0f);
 		if(ProjectileVfxNiagaraComponent)	// if our component is valid
 		{

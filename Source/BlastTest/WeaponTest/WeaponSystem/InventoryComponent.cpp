@@ -186,6 +186,7 @@ void UInventoryComponent::BeginPlay()
 	{	// we want the default mod to stay forever so set never destroy to true and destroy the mesh component
 		DefaultMod=ModParent;
 		DefaultMod->bNeverDestroy = true;
+		DefaultMod->bIsDefaultMod = true;
 		DefaultMod->MeshComponent->DestroyComponent();
 	}
 

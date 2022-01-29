@@ -83,7 +83,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 			//KnockBackPlayer(ModFireKnockBackForce, CameraComponent);
 		}
 		
-		if(AmmoCount>0)
+		if(AmmoCount>0 && !bIsDefaultMod)
 		{
 			AmmoCount--;
 		}
