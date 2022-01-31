@@ -97,6 +97,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DealDamageToEnemy(int Damage);
 
+
+	/**
+	* #Todo Implemented by Jack to get the AI to ragdoll. THis is called when an enemies health reaches zero. Do whatever you need to do in this function
+	*/
+	UFUNCTION(BlueprintCallable)
+	void Ragdoll();
+
 	/**
 	 * @return  Gives amount of damage enemy deals
 	 */
@@ -276,6 +283,11 @@ protected:
 	/**Speed of any bullets fired by this enemy*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Projectile Settings", meta = (AllowProtectedAccess = "true"))
 	float BulletSpeed;
+	/**The amount of time the enemy will be ragdolled for after an AI is killed*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | General Stats", meta = (AllowProtectedAccess = "true"))
+	float RagdollTimer = 1.0;
+	/**If true the ragdoll timer will be set when the timer reaches zero the AI destroys itself*/
+	bool StartRagdollTimer=false;
 	/**Enemy type identifier to be used to get the proper loot table when dieing
 	 *@warning Must be set in each child
 	 */
