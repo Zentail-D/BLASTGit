@@ -57,11 +57,10 @@ void AProjectileParent::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		if (GetInstigator())
 			Cast<ANetworkChar>(GetInstigator())->OnNotifyProjectileHitEnemy();
 		
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit Enemy"));
-		
 		AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(OtherActor);
 		if (Enemy)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit Enemy"));
 			Enemy->DealDamageToEnemy(DamageAmount);
 		}		
 		Destroy();
