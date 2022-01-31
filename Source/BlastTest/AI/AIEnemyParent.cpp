@@ -100,7 +100,7 @@ void AAIEnemyParent::Tick(float DeltaTime)
 				break;
 			}
 	}
-	if(CurrentHealth<=0)
+	if(CurrentHealth<=0 && !StartRagdollTimer)
 	{
 		//death
 		if(HasAuthority())
@@ -112,8 +112,16 @@ void AAIEnemyParent::Tick(float DeltaTime)
 		}
 		FreezeBehavior();
 		DestroyChildren();
-		Destroy();
-		
+		StartRagdollTimer=true;
+		Ragdoll();
+	}
+	if(StartRagdollTimer)
+	{
+		RagdollTimer-=DeltaTime;
+		if(RagdollTimer<0)
+		{
+			Destroy();
+		}
 	}
 
 }
@@ -272,6 +280,11 @@ void AAIEnemyParent::DealDamageToEnemy(int Damage)
 {
 	CurrentHealth=CurrentHealth-Damage;
 	
+}
+
+void AAIEnemyParent::Ragdoll()
+{
+	GEngine->AddOnScreenDebugMessage(-1,1.5,FColor::Red,TEXT("Ragdoll function called"));
 }
 
 void AAIEnemyParent::DecreaseAttackingCooldown(float TimeToSubtract)
