@@ -7,7 +7,7 @@
 #include "BlastTestCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "NetworkChar.h"
-#include "Kismet/KismetSystemLibrary.h"
+//#include "Kismet/KismetSystemLibrary.h"
 
 
 ARocketProjectile::ARocketProjectile()
@@ -37,12 +37,15 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	//get list of all actors affected by the aoe 
 	TArray<AActor*> OverlappedActors;
 	SphereCollider->GetOverlappingActors(OverlappedActors);
-	//draw sphere for debugging
-	//DrawDebugSphere(GetWorld(),SphereCollider->GetComponentLocation(),ExplosionRadius,12,FColor::Red,false,200.0f,SDPG_World,2.0);
-
+	if(bDrawExplosion)
+	{
+		//draw sphere for debugging
+		DrawDebugSphere(GetWorld(),SphereCollider->GetComponentLocation()/*-FVector(0,0,100)*/,ExplosionRadius,12,FColor::Red,false,20.0f,SDPG_World,2.0);
+	}
 	//go through that list and damage all enemies
 	for (AActor* OverlappedActor : OverlappedActors)
 	{
+		
 		if (OverlappedActor->Tags.Contains("Enemy"))
 		{
 			// notify the player that we hit an enemy
@@ -52,7 +55,17 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 			AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(OverlappedActor);
 			if (Enemy)
 			{
+				//Enemy->GetMesh()->SetSimulatePhysics(true);
+				
+				
 				Enemy->DealDamageToEnemy(DamageAmount);
+				if(Enemy->GetCurrentHealth()==0)
+				{
+					//Enemy->GetMesh()->SetSimulatePhysics(true);
+				
+					//Enemy->GetMesh()->AddImpulse((Enemy->GetActorLocation()-SphereCollider->GetComponentLocation())*ExplosionStrength);
+					Enemy->GetMesh()->AddRadialImpulse(SphereCollider->GetComponentLocation()-FVector(0,0,100),ExplosionRadius,ExplosionStrength,ERadialImpulseFalloff::RIF_Constant,true);
+				}
 			}
 		}
 	}
@@ -71,6 +84,16 @@ void ARocketProjectile::SetExplosionRadius(float NewExplosionRadius)
 float ARocketProjectile::GetExplosionRadius() const
 {
 	return ExplosionRadius;
+}
+
+void ARocketProjectile::SetExplosionStrength(float NewExplosionStrength)
+{
+	ExplosionStrength = NewExplosionStrength;
+}
+
+float ARocketProjectile::GetExplosionStrength() const
+{
+	return ExplosionStrength;
 }
 
 void ARocketProjectile::BeginPlay()

@@ -41,7 +41,11 @@ protected:
 	
 	/**Radius from impact point that the damage is done*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Rocket Launcher Unique", meta = (AllowProtectedAccess = "true"))
-	float ExplosionRadius=500.0f;
+	float ExplosionRadius=100.0f;
+	/**knockback strength of the explosion */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Rocket Launcher Unique", meta = (AllowProtectedAccess = "true"))
+	float ExplosionStrength=2000.0f;
+	
 	/**Object types that the Area of Effect Damage Affects*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings | Rocket Launcher Unique", meta = (AllowProtectedAccess = "true"))
 	TArray<TEnumAsByte<EObjectTypeQuery> > AffectedObjectTypes;

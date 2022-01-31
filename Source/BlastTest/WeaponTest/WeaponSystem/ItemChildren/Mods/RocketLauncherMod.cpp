@@ -66,6 +66,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 			}
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetExplosionRadius(ExplosionRadius);
+			ProjectileParent->SetExplosionStrength(ExplosionStrength);
 			ProjectileParent->SetOwnersName(OwnersName);
 			ProjectileParent->SetInstigator(GetInstigator());
 
