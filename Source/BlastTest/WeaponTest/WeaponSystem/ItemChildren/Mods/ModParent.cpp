@@ -106,12 +106,15 @@ void AModParent::PlayerCameraShake(const TSubclassOf<UMatineeCameraShake> Shake,
 	// for loop to go through the player controllers in the world
 	for( FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator )
 	{
-		const ANetworkChar* Player = Cast<ANetworkChar>(Iterator->Get()->GetCharacter());	// get reference to player controlled by controller
-		if (!Player || !GetInstigator())
-			return;
-		if (Player->GetName() == GetInstigator()->GetName())	// if its the same as the owning character 
+		if(Iterator)
 		{
-			Iterator->Get()->PlayerCameraManager->StartMatineeCameraShake(Shake, Scale);	// play shake
+			const ANetworkChar* Player = Cast<ANetworkChar>(Iterator->Get()->GetCharacter());	// get reference to player controlled by controller
+			if (!Player || !GetInstigator())
+				return;
+			if (Player->GetName() == GetInstigator()->GetName())	// if its the same as the owning character 
+				{
+				Iterator->Get()->PlayerCameraManager->StartMatineeCameraShake(Shake, Scale);	// play shake
+				}
 		}
 	}
 }
