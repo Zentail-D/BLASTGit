@@ -40,8 +40,8 @@ public:
 	/**
 	 * Drop component handles the drops for the mods that ai drop when destroyed
 	 */
-	//UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = InvokerComponent)
-	//UDropItemComponent* DropItemComponent;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = InvokerComponent)
+	class UDropItemComponent* DropItemComponent;
 	
 	/**
 	 * Reference to all the Player in the Array

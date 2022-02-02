@@ -6,6 +6,7 @@
 #include <Engine/World.h>
 
 #include "EnemyProjectile.h"
+#include "DropItemComponent.h"
 #include "EnemyControllerParent.h"
 
 // Sets default values
@@ -42,10 +43,10 @@ AAIEnemyParent::AAIEnemyParent()
 		InvokerComponent= CreateDefaultSubobject<UNavigationInvokerComponent>(TEXT("InvokerComponent"));
 	}
 
-	/*if(!DropItemComponent)
+	if(!DropItemComponent)
 	{
 		DropItemComponent= CreateDefaultSubobject<UDropItemComponent>(TEXT("DropItemComponent"));
-	}*/
+	}
 }
 
 // Called when the game starts or when spawned
@@ -105,10 +106,10 @@ void AAIEnemyParent::Tick(float DeltaTime)
 		//death
 		if(HasAuthority())
 		{
-			/*if(DropItemComponent)
+			if(DropItemComponent)
 			{
 				DropItemComponent->DropRandomMod(GetActorLocation());
-			}*/
+			}
 		}
 		FreezeBehavior();
 		DestroyChildren();
