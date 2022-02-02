@@ -15,6 +15,7 @@ ADefaultAmmo::ADefaultAmmo()
 	RateOfFireReset =RateOfFire;
 	ProjectileSpeed = 3000;
 	ProjectileLifeTime = 1.0f;
+	ProjectileImpulse = 100;
 
 }
 
@@ -63,6 +64,7 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 			ProjectileParent->SetProjectileLifespan(ProjectileLifeTime);
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
+			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetOwnersName(OwnersName);
 			ProjectileParent->SetInstigator(GetInstigator());
 		}

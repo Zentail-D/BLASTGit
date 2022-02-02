@@ -68,6 +68,11 @@ void AProjectileParent::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit Enemy"));
 			Enemy->DealDamageToEnemy(DamageAmount);
+			if(Enemy->GetCurrentHealth()<=0)
+			{
+				Enemy->GetMesh()->SetSimulatePhysics(true);
+				Enemy->GetMesh()->AddImpulse(FVector(ProjectileMovementComponent->Velocity*ImpulsePower));
+			}
 		}
 	}
 	if (OtherActor->Tags.Contains("Player"))
@@ -88,6 +93,16 @@ void AProjectileParent::SetDamageAmount(const int NewDamageAmount)
 int AProjectileParent::GetDamageAmount() const
 {
 	return DamageAmount;
+}
+
+void AProjectileParent::SetImpulsePower(int NewImpulsePower)
+{
+	ImpulsePower = NewImpulsePower;
+}
+
+int AProjectileParent::GetImpulsePower() const
+{
+	return ImpulsePower;
 }
 
 // Called every frame

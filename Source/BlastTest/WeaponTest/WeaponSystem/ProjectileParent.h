@@ -63,6 +63,13 @@ public:
 	void SetDamageAmount(int NewDamageAmount);
 
 	int GetDamageAmount() const;
+	/**
+	*Setter for the Impulse that the bullet does
+	*@param NewImpulsePower New Power of impulse the bullet needs to do
+	*/
+	void SetImpulsePower(int NewImpulsePower);
+
+	int GetImpulsePower() const;
 
 	/** call when spawning a projectile if you want to use this to set the lifespan
 	 *  @param Lifespan - the new lifespan to set to
@@ -82,7 +89,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Projectile Settings", meta= (AllowProtectedAccess= "true"))
 	float ProjectileLifespan;
-
+	UPROPERTY(EditAnywhere, Category = "Projectile Settings", meta= (AllowProtectedAccess= "true"))
+	float ImpulsePower;
+	
 	/** Name of the players character that has fired this projectile */
 	FString OwnerName;
 

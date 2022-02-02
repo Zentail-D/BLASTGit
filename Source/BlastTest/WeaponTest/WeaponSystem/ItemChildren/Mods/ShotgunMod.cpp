@@ -76,6 +76,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 				}
 				ShotgunProjectile->FireInDirection(CameraComponent->GetComponentRotation().Vector()+spread);
 				ShotgunProjectile->SetDamageAmount(ProjectileDamage);
+				ShotgunProjectile->SetImpulsePower(ProjectileImpulse);
 				ShotgunProjectile->SetInstigator(GetInstigator());
 			}
 			// play our screen shake

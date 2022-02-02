@@ -39,6 +39,11 @@ void ARailgunProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		if (Enemy)
 		{
 			Enemy->DealDamageToEnemy(DamageAmount);
+			if(Enemy->GetCurrentHealth()<=0)
+			{
+				Enemy->GetMesh()->SetSimulatePhysics(true);
+				Enemy->GetMesh()->AddImpulse(FVector(ProjectileMovementComponent->Velocity*ImpulsePower));
+			}
 		}		
 	}
 }

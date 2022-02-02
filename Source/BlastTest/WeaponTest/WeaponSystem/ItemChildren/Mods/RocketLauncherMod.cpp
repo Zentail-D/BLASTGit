@@ -65,6 +65,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 				UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
 			}
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
+			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetExplosionRadius(ExplosionRadius);
 			ProjectileParent->SetExplosionStrength(ExplosionStrength);
 			ProjectileParent->SetOwnersName(OwnersName);

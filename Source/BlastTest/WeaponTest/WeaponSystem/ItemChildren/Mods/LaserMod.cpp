@@ -47,6 +47,7 @@ void ALaserMod::Tick(float DeltaTime)
 				// initialize hit info
 				FHitResult HitResult;
 				// do trace
+				
 				const bool HadHit = GetWorld()->LineTraceSingleByChannel(
 					HitResult,
 					PlayerMuzzleComponent->GetComponentLocation(),

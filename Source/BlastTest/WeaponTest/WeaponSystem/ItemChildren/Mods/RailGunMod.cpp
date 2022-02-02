@@ -79,6 +79,7 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 				UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
 			}
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
+			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetOwnersName(OwnerName);
 			ProjectileParent->SetInstigator(GetInstigator());
 
