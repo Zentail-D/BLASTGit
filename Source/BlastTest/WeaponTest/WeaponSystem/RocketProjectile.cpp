@@ -55,17 +55,8 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 			AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(OverlappedActor);
 			if (Enemy)
 			{
-				//Enemy->GetMesh()->SetSimulatePhysics(true);
-				
-				
 				Enemy->DealDamageToEnemy(DamageAmount);
-				if(Enemy->GetCurrentHealth()==0)
-				{
-					//Enemy->GetMesh()->SetSimulatePhysics(true);
-				
-					//Enemy->GetMesh()->AddImpulse((Enemy->GetActorLocation()-SphereCollider->GetComponentLocation())*ExplosionStrength);
-					Enemy->GetMesh()->AddRadialImpulse(SphereCollider->GetComponentLocation()-FVector(0,0,100),ExplosionRadius,ExplosionStrength,ERadialImpulseFalloff::RIF_Constant,true);
-				}
+				Enemy->GetMesh()->AddRadialImpulse(SphereCollider->GetComponentLocation()-FVector(0,0,100),ExplosionRadius,ExplosionStrength,ERadialImpulseFalloff::RIF_Constant,true);
 			}
 		}
 	}
