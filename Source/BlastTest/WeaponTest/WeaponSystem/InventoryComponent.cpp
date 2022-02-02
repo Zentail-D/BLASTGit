@@ -233,8 +233,6 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick Tick, FActor
 				GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Blue, FVector(ModSlot1->bReadyToDestroy).ToString());
 	
 			}
-				
-			GEngine->AddOnScreenDebugMessage(-1, 0.01, FColor::Red, TEXT("updating mod slot 1 ammo"));
 			break;
 		}
 	case EModSlots::Ve_SLOT2:
