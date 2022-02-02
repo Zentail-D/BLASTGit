@@ -17,15 +17,19 @@ public:
 	// Sets default values for this actor's properties
 	AGenerator();
 
+	/**Time it takes to spawn SpawnObject after being set active**/
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	float TimeToGenerate;
 
+	/**Keeping track of till spawning SpawnObject **/
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	float CurrentTime;
 
+	/**boolean if set true will spawn SpawnObject after TimeToGenerate time passes**/
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool IsActive;
 
+    /**The class the genrator will spawn**/
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> SpawnObject;
 	
@@ -40,7 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetActive(bool ActiveParma);
 
-	/** spawns the ScoreObject when called**/
+	/** spawns the ScoreObject**/
 	UFUNCTION(BlueprintCallable)
 	void SpawnScoreObject();
 	
