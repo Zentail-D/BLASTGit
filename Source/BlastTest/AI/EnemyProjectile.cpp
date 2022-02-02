@@ -4,6 +4,7 @@
 #include "EnemyProjectile.h"
 
 #include "AIEnemyParent.h"
+#include "NetworkChar.h"
 
 
 // Sets default values
@@ -77,17 +78,17 @@ void AEnemyProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 		Destroy();
 	}
 	//Destroy();
-	//ANetworkChar* enemyPlayer = Cast<ANetworkChar>(OtherActor);
-	//if (enemyPlayer)
-	//{
-		//if(enemyPlayer!=GetOwner())
-	//	{
+	ANetworkChar* enemyPlayer = Cast<ANetworkChar>(OtherActor);
+	if (enemyPlayer)
+	{
+		if(enemyPlayer!=GetOwner())
+		{
 			/**deal damage to enemy player*/
-	//		enemyPlayer->DealDamageToPlayer(DamageAmount);
+			enemyPlayer->DealDamageToPlayer(DamageAmount);
 			/**prep for deletion*/
-	//		Destroy();
-	//	}
-	//}
+			Destroy();
+		}
+	}
 }
 
 void AEnemyProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -95,21 +96,16 @@ void AEnemyProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	/**if overlap enemy Player*/
 	
 	//Destroy();
-	/*//ANetworkChar* enemyPlayer = Cast<ANetworkChar>(OtherActor);
+	ANetworkChar* enemyPlayer = Cast<ANetworkChar>(OtherActor);
 	if (enemyPlayer)
 	{
-		/**deal damage to enemy player	#1#
+		//deal damage to enemy player	
 		if(enemyPlayer!=GetInstigator())
 		{
 			enemyPlayer->DealDamageToPlayer(DamageAmount);
-			/*if(GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1,.5f,FColor::Red,enemyPlayer->GetName());
-		
-			}#1#
 			Destroy();
 		}
-	}*/
+	}
 }
 
 void AEnemyProjectile::SetDamageAmount(int NewDamageAmount)
