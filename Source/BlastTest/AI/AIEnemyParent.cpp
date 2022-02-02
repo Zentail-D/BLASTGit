@@ -285,7 +285,8 @@ void AAIEnemyParent::DealDamageToEnemy(int Damage)
 
 void AAIEnemyParent::Ragdoll()
 {
-	GEngine->AddOnScreenDebugMessage(-1,1.5,FColor::Red,TEXT("Ragdoll function called"));
+	//GEngine->AddOnScreenDebugMessage(-1,1.5,FColor::Red,TEXT("Ragdoll function called"));
+	GetMesh()->SetSimulatePhysics(true);
 }
 
 void AAIEnemyParent::DecreaseAttackingCooldown(float TimeToSubtract)
