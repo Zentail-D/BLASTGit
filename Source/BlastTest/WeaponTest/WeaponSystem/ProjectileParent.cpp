@@ -43,28 +43,41 @@ void AProjectileParent::FireInDirection(const FVector& ShootDirection) const
 void AProjectileParent::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, GetInstigator()->GetName());
+	if (OtherActor->Tags.Contains("Player") && OtherActor->GetName() == GetInstigator()->GetName())
+	{
+		return;	// we are hitting ourselves when the projectile spawns
+	}
+	
 	//if overlap with environment
 	if(OtherActor->Tags.Contains("Environment"))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit Non-Enemy"));
 		Destroy();
 	}
-
-	//if overlap with enemy
-	if(OtherActor->Tags.Contains("Enemy"))
+	
+	// notify the player that we hit an enemy
+	if (GetInstigator())
+		Cast<ANetworkChar>(GetInstigator())->OnNotifyProjectileHitEnemy();
+	
+	if (OtherActor->Tags.Contains("Enemy"))
 	{
-		// notify the player that we hit an enemy
-		if (GetInstigator())
-			Cast<ANetworkChar>(GetInstigator())->OnNotifyProjectileHitEnemy();
-		
+		// This is just our regular enemies
 		AAIEnemyParent* Enemy = Cast<AAIEnemyParent>(OtherActor);
 		if (Enemy)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Hit Enemy"));
 			Enemy->DealDamageToEnemy(DamageAmount);
-		}		
-		Destroy();
+		}
 	}
+	if (OtherActor->Tags.Contains("Player"))
+	{
+		// This is an enemy player
+		ANetworkChar* Player = Cast<ANetworkChar>(OtherActor);
+		Player->DealDamageToPlayer(DamageAmount);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
+	}
+	Destroy();
 }
 
 void AProjectileParent::SetDamageAmount(const int NewDamageAmount)
