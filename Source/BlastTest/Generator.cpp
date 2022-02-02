@@ -47,7 +47,6 @@ void AGenerator::SetActive(bool ActiveParma)
 
 void AGenerator::SpawnScoreObject()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, FString::Printf(TEXT("SpawnScoreObject")));
 	
 	FActorSpawnParameters SpawnPara;
 	SpawnPara.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
