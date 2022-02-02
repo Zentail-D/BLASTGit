@@ -60,8 +60,10 @@ void ALaserMod::Tick(float DeltaTime)
 				
 				if(HadHit)
 				{
-					ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",HitResult.Location);
+					ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",HitResult.ImpactPoint);
 					GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, FString("Hit"));
+					
+					GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, HitResult.ImpactPoint.ToString());
 					if (HitResult.Actor->ActorHasTag("Enemy") && CanDealDamage)
 					{
 						// notify the player that we hit an enemy
@@ -80,9 +82,10 @@ void ALaserMod::Tick(float DeltaTime)
 				{
 					//GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, FString("No Hit"));
 					//DrawDebugCircle(GetWorld(), PlayerMuzzleComponent->GetComponentLocation()+GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange, 200, 50, FColor::Blue, true, -1, 0, 10);
-					ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",PlayerMuzzleComponent->GetComponentLocation()+GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange);
+					ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",HitResult.TraceEnd/*PlayerMuzzleComponent->GetComponentLocation()+GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange*/);
+					GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, HitResult.TraceEnd.ToString());
 				}
-			}
+			}	
 				
 			
 		}
@@ -121,7 +124,7 @@ void ALaserMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComp
 		NAME_None,//pass it the attach point name
 		MuzzleLocation->GetComponentLocation(),		// start point
 		GetFireDirection(CameraComponent, MuzzleLocation).Rotation(),// Rotation
-		EAttachLocation::SnapToTarget,//how strong it will be centered while moving
+		EAttachLocation::SnapToTargetIncludingScale,//how strong it will be centered while moving
 		false);		//we destroy someWhere else, so leave as false
 }
 

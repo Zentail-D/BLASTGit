@@ -92,7 +92,11 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	int ProjectileDamage;
-
+	/**
+	* Impulse power the projectile fired from the weapon will do
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
+	int ProjectileImpulse;
 	/**
 	 * The amount of shots that a mod will have before it will disappear
 	 */
