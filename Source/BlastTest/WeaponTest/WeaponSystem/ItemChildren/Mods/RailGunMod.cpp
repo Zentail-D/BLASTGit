@@ -86,7 +86,7 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 			ProjectileParent->SetInstigator(GetInstigator());
 
 			// Finish spawning actor now
-			UGameplayStatics::FinishSpawningActor(ProjectileParent, CameraComponent->GetComponentTransform());
+			UGameplayStatics::FinishSpawningActor(ProjectileParent, MuzzleLocation->GetComponentTransform()+CollisionTransform);
 			// we fire in direction after the actor is officially spawned
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 		}
