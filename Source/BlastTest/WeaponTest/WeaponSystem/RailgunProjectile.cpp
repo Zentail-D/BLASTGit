@@ -19,6 +19,11 @@ ARailgunProjectile::ARailgunProjectile()
 void ARailgunProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor->Tags.Contains("Player") && OtherActor->GetName() == GetInstigator()->GetName())
+	{
+		return;	// we are hitting ourselves when the projectile spawns
+	}
+	
 	//if overlap with environment
 	if(OtherActor->Tags.Contains("Environment"))
 	{
@@ -46,6 +51,14 @@ void ARailgunProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			}
 		}		
 	}
+	if (OtherActor->Tags.Contains("Player"))
+	{
+		// This is an enemy player
+		ANetworkChar* Player = Cast<ANetworkChar>(OtherActor);
+		Player->DealDamageToPlayer(DamageAmount);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
+	}
+	Destroy();
 }
 
 void ARailgunProjectile::Tick(float DeltaSeconds)

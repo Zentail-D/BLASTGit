@@ -77,7 +77,15 @@ void ALaserMod::Tick(float DeltaTime)
 							Enemy->DealDamageToEnemy(ProjectileDamage);
 							CanDealDamage = false;
 						}
-					}	
+					}
+					if (HitResult.Actor->Tags.Contains("Player"))
+					{
+						// This is an enemy player
+						ANetworkChar* Player = Cast<ANetworkChar>(HitResult.Actor);
+						Player->DealDamageToPlayer(ProjectileDamage);
+						GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
+					}
+					Destroy();
 				}
 				else
 				{

@@ -27,7 +27,10 @@ ARocketProjectile::ARocketProjectile()
 void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
+	if (OtherActor->Tags.Contains("Player") && OtherActor->GetName() == GetInstigator()->GetName())
+	{
+		return;	// we are hitting ourselves when the projectile spawns
+	}
 	// make sure to also cull out the hit actors we dont care about
 	if (OtherActor->Tags.Contains("Projectile") || OtherActor->GetName() == OwnerName)
 	{
@@ -61,6 +64,13 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 					Enemy->GetMesh()->AddRadialImpulse(SphereCollider->GetComponentLocation()-FVector(0,0,100),ExplosionRadius,ExplosionStrength,ERadialImpulseFalloff::RIF_Constant,true);
 				}
 			}
+		}
+		if (OtherActor->Tags.Contains("Player"))
+		{
+			// This is an enemy player
+			ANetworkChar* Player = Cast<ANetworkChar>(OtherActor);
+			Player->DealDamageToPlayer(DamageAmount);
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
 		}
 	}
 	

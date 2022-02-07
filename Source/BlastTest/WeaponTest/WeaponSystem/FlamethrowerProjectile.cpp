@@ -80,8 +80,10 @@ void AFlamethrowerProjectile::Tick(float DeltaSeconds)
 void AFlamethrowerProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//Super::OnOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-
+	if (OtherActor->Tags.Contains("Player") && OtherActor->GetName() == GetInstigator()->GetName())
+	{
+		return;	// we are hitting ourselves when the projectile spawns
+	}
 	//if overlap with environment
 	if(OtherActor->Tags.Contains("Environment"))
 	{
@@ -104,8 +106,15 @@ void AFlamethrowerProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent
 			Enemy->DealDamageToEnemy(DamageAmount);
 			Enemy->SetEnemyStatusEffect(EWeaponStatusEffects::Ve_Fire);
 			//this->NumberOfHits++;
-		}		
-		
+		}	
 	}
+	if (OtherActor->Tags.Contains("Player"))
+	{
+		// This is an enemy player
+		ANetworkChar* Player = Cast<ANetworkChar>(OtherActor);
+		Player->DealDamageToPlayer(DamageAmount);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
+	}
+	Destroy();
 	
 }
