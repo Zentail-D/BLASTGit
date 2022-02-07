@@ -191,6 +191,7 @@ void UInventoryComponent::BeginPlay()
 		DefaultMod->bNeverDestroy = true;
 		DefaultMod->bIsDefaultMod = true;
 		DefaultMod->MeshComponent->DestroyComponent();
+		DefaultMod->InventoryRef = this;
 	}
 
 	// set our owning characters name
@@ -218,7 +219,7 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick Tick, FActor
 			UpdateActiveMod();
 		}
 	}
-		
+	GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Blue, FString("Player owning inventory is ") + GetOwner()->GetInstigator()->GetName());
 	// update our active mod ammo count
 	switch(ActiveModSlot)
 	{

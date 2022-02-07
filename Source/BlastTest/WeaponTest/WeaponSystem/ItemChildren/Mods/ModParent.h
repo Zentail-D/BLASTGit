@@ -74,6 +74,9 @@ public:
 	/** boolean used to determine weather the mod is default. If so we dont take away from its ammo */
 	bool bIsDefaultMod = false;
 
+	/* owning inventory reference*/
+	class UInventoryComponent* InventoryRef;
+
 protected:
 	virtual void BeginPlay() override;
 

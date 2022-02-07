@@ -84,6 +84,10 @@ void AFlamethrowerProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent
 	{
 		return;	// we are hitting ourselves when the projectile spawns
 	}
+	if (!OtherActor->Tags.Contains("Player") && !OtherActor->Tags.Contains("Environment") && !OtherActor->Tags.Contains("Enemy") )
+	{
+		return; // were overlapping with something we dont care about
+	}
 	//if overlap with environment
 	if(OtherActor->Tags.Contains("Environment"))
 	{

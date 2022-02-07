@@ -31,6 +31,10 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	{
 		return;	// we are hitting ourselves when the projectile spawns
 	}
+	if (!OtherActor->Tags.Contains("Player") && !OtherActor->Tags.Contains("Environment") && !OtherActor->Tags.Contains("Enemy") )
+	{
+		return; // were overlapping with something we dont care about
+	}
 	// make sure to also cull out the hit actors we dont care about
 	if (OtherActor->Tags.Contains("Projectile") || OtherActor->GetName() == OwnerName)
 	{
