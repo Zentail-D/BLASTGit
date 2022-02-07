@@ -58,6 +58,10 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Instigator=GetInstigator();
+		FVector CollisionVector = GetFireDirection(CameraComponent, MuzzleLocation)*-1;
+		CollisionVector*= ProjectileMuzzleOffset;
+		FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
+
 		//spawn each projectile collision box
 		for(int i = 0; i<projectilesToSpawn; i++)
 		{
@@ -67,7 +71,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 			float z=FMath::RandRange(MinZSpread/6,MaxZSpread/6);
 			FVector spread = FVector( x, y,z );
 
-			AShotgunProjectile* ShotgunProjectile = GetWorld()->SpawnActor<AShotgunProjectile>(ProjectileClass,MuzzleLocation->GetComponentLocation(), FRotator(0,0,0), SpawnParams);
+			AShotgunProjectile* ShotgunProjectile = GetWorld()->SpawnActor<AShotgunProjectile>(ProjectileClass,MuzzleLocation->GetComponentLocation()+CollisionVector, FRotator(0,0,0), SpawnParams);
 			if(ShotgunProjectile)
 			{
 				if(FireSound)

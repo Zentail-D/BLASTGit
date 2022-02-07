@@ -126,7 +126,11 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	float ProjectileLifeTime;
-	
+	/**
+	* The amount that the collision box "lags" behind the VFX
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
+	float ProjectileMuzzleOffset;
 	/**
 	 * For later implementation for status effect if needed
 	 */

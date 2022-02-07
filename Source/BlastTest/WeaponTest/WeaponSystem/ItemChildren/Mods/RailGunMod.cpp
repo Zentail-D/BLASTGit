@@ -68,8 +68,10 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 		ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(),GetFireDirection(CameraComponent, MuzzleLocation).Rotation());
 		ProjectileVfxNiagaraComponent->SetFloatParameter("User.Lifetime", ProjectileLifeTime);
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity", FVector(ProjectileSpeed, 0.f, 0.f));
-
-		AProjectileParent* ProjectileParent = GetWorld()->SpawnActorDeferred<AProjectileParent>(ProjectileClass, CameraComponent->GetComponentTransform(), GetOwner(), GetInstigator());
+		FVector CollisionVector = GetFireDirection(CameraComponent, MuzzleLocation)*-1;
+		CollisionVector*= ProjectileMuzzleOffset;
+		FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
+		AProjectileParent* ProjectileParent = GetWorld()->SpawnActorDeferred<AProjectileParent>(ProjectileClass, MuzzleLocation->GetComponentTransform()+CollisionTransform, GetOwner(), GetInstigator());
 		
 		if(ProjectileParent)
 		{

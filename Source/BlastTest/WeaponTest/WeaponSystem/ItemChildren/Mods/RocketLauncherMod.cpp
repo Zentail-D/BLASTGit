@@ -54,8 +54,10 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 		ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(),CameraComponent->GetComponentRotation());
 		ProjectileVfxNiagaraComponent->SetFloatParameter("User.Lifetime",ProjectileLifeTime);
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
-		
-		ARocketProjectile* ProjectileParent = GetWorld()->SpawnActorDeferred<ARocketProjectile>(ProjectileClass, CameraComponent->GetComponentTransform(), GetOwner(), GetInstigator());
+		FVector CollisionVector = GetFireDirection(CameraComponent, MuzzleLocation)*-1;
+		CollisionVector*= ProjectileMuzzleOffset;
+		FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
+		ARocketProjectile* ProjectileParent = GetWorld()->SpawnActorDeferred<ARocketProjectile>(ProjectileClass, MuzzleLocation->GetComponentTransform()+CollisionTransform, GetOwner(), GetInstigator());
 		
 		if(ProjectileParent)
 		{
