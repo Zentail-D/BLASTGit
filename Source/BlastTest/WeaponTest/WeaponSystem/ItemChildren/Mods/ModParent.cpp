@@ -15,6 +15,7 @@ AModParent::AModParent()
 		MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	
+	
 }
 
 void AModParent::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName)
