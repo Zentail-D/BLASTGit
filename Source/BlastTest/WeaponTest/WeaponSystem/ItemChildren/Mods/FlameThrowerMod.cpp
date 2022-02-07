@@ -15,11 +15,7 @@ AFlameThrowerMod::AFlameThrowerMod()
 
 	this->RateOfFlames = 0.1f;
 	this->RateOfFlamesReset = this->RateOfFlames;
-
-	FVector PrintValue = FVector(this->RateOfFlames);
-	if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, PrintValue.ToString() );
-		
+	
 }
 
 void AFlameThrowerMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation,

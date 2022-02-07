@@ -3,6 +3,8 @@
 
 #include "WeaponTest/WeaponSystem/InventoryComponent.h"
 
+#include "Net/UnrealNetwork.h"
+
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
 {
@@ -12,6 +14,8 @@ UInventoryComponent::UInventoryComponent()
 
 	// set our current health to max at start
 	CurrentPlayerHealth = MaxPlayerHealth;
+	
+	SetIsReplicated(true);
 }
 
 void UInventoryComponent::PickupItem(AItemParent* ItemToPickup)
@@ -170,7 +174,6 @@ FString UInventoryComponent::GetActiveModName() const
 	default:
 		{
 			return DefaultMod->GetModTypeName();
-			break;
 		}
 	}
 }
