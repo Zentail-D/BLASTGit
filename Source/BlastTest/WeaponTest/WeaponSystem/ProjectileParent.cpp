@@ -73,6 +73,7 @@ void AProjectileParent::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 				Enemy->GetMesh()->AddImpulse(FVector(ProjectileMovementComponent->Velocity*ImpulsePower));
 			}
 		}
+		Destroy();
 	}
 	if (OtherActor->Tags.Contains("Player"))
 	{
@@ -80,8 +81,9 @@ void AProjectileParent::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		ANetworkChar* Player = Cast<ANetworkChar>(OtherActor);
 		Player->DealDamageToPlayer(DamageAmount);
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
+		Destroy();
 	}
-	Destroy();
+	
 }
 
 void AProjectileParent::SetDamageAmount(const int NewDamageAmount)

@@ -70,18 +70,23 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 			float y=FMath::RandRange(MinYSpread/6,MaxYSpread/6);
 			float z=FMath::RandRange(MinZSpread/6,MaxZSpread/6);
 			FVector spread = FVector( x, y,z );
+			
+		
 
-			AShotgunProjectile* ShotgunProjectile = GetWorld()->SpawnActor<AShotgunProjectile>(ProjectileClass,MuzzleLocation->GetComponentLocation()+CollisionVector, FRotator(0,0,0), SpawnParams);
+			AShotgunProjectile* ShotgunProjectile = GetWorld()->SpawnActorDeferred<AShotgunProjectile>(ProjectileClass,MuzzleLocation->GetComponentTransform()+CollisionTransform, GetOwner(), GetInstigator());
 			if(ShotgunProjectile)
 			{
 				if(FireSound)
 				{
 					UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
 				}
-				ShotgunProjectile->FireInDirection(CameraComponent->GetComponentRotation().Vector()+spread);
+				
 				ShotgunProjectile->SetDamageAmount(ProjectileDamage);
 				ShotgunProjectile->SetImpulsePower(ProjectileImpulse);
 				ShotgunProjectile->SetInstigator(GetInstigator());
+				// Finish spawning actor now
+				UGameplayStatics::FinishSpawningActor(ShotgunProjectile, MuzzleLocation->GetComponentTransform()+CollisionTransform);
+				ShotgunProjectile->FireInDirection(CameraComponent->GetComponentRotation().Vector()+spread);
 			}
 			// play our screen shake
 			PlayerCameraShake(ModFireShake, 1.0f);

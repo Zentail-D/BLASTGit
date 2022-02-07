@@ -74,7 +74,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 			ProjectileParent->SetInstigator(GetInstigator());
 
 			// Finish spawning actor now
-			UGameplayStatics::FinishSpawningActor(ProjectileParent, CameraComponent->GetComponentTransform());
+			UGameplayStatics::FinishSpawningActor(ProjectileParent, MuzzleLocation->GetComponentTransform()+CollisionTransform);
 			// we fire in direction after the actor is officailly spawned
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 			
