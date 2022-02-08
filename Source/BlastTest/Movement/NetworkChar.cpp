@@ -65,8 +65,8 @@ void ANetworkChar::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	//GEngine->AddOnScreenDebugMessage(-1,.01,FColor::Red,TEXT("I'm ticking"));
 	const float CurHealth = PlayerInventory->GetCurrentPlayerHealth();
-	if (HasAuthority())
-		GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Blue,  GetName() + FString(": Health = ") + FString::SanitizeFloat(CurHealth));
+	//if (HasAuthority())
+	//	GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Blue,  GetName() + FString(": Health = ") + FString::SanitizeFloat(CurHealth));
 	if(PlayerInventory->GetCurrentPlayerHealth()<=0)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1,.4,FColor::Red,TEXT("I'm a dead bitch"));

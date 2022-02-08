@@ -233,8 +233,6 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick Tick, FActor
 			if (ModSlot1)
 			{
 				ActiveModAmmoCount = FString::FromInt(ModSlot1->GetCurrentAmmoCount());
-				GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Blue, FVector(ModSlot1->bReadyToDestroy).ToString());
-	
 			}
 			break;
 		}
@@ -319,7 +317,6 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 					ModSlot1->bNeverDestroy = true;
 					ModSlot1->SetInstigator(GetOwner()->GetInstigator());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString("pickup into slot 1"));
 				} else if (!ModSlot2)	// if mod slot 2 is empty then add new mod to that slot
 				{
 					ModSlot2 = NewMod;
