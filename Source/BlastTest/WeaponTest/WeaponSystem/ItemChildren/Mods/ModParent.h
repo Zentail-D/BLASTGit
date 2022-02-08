@@ -75,7 +75,7 @@ public:
 	bool bIsDefaultMod = false;
 
 	/* owning inventory reference*/
-	class UInventoryComponent* InventoryRef;
+	class ANetworkChar* OwningPlayer;
 
 protected:
 	virtual void BeginPlay() override;

@@ -111,11 +111,11 @@ void AModParent::PlayerCameraShake(const TSubclassOf<UMatineeCameraShake> Shake,
 		if(Iterator)
 		{
 			const ANetworkChar* Player = Cast<ANetworkChar>(Iterator->Get()->GetCharacter());	// get reference to player controlled by controller
-			if (!Player || !InventoryRef->GetOwner())
+			if (!Player || !OwningPlayer)
 				return;
 			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green,  FString("Player from iterator is ") + Player->GetName());
-			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green,  FString("Owning Player Firing Mod is ") + InventoryRef->GetOwner()->GetName());
-			if (Player->GetName() == InventoryRef->GetOwner()->GetName())	// if its the same as the owning character 
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green,  FString("Owning Player Firing Mod is ") + OwningPlayer->GetName());
+			if (Player->GetName() == OwningPlayer->GetName())	// if its the same as the owning character 
 			{
 				Iterator->Get()->PlayerCameraManager->StartMatineeCameraShake(Shake, Scale);	// play shake
 				return;

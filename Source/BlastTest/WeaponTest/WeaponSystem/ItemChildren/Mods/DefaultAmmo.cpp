@@ -53,9 +53,10 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
 		FVector CollisionVector = GetFireDirection(CameraComponent, MuzzleLocation)*-1;
 		CollisionVector*= ProjectileMuzzleOffset;
+		FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Instigator=GetInstigator();
-		AProjectileParent* ProjectileParent = GetWorld()->SpawnActor<AProjectileParent>(ProjectileClass,MuzzleLocation->GetComponentLocation()+CollisionVector, FRotator(0,0,0), SpawnParams);
+		AProjectileParent* ProjectileParent = GetWorld()->SpawnActorDeferred<AProjectileParent>(ProjectileClass,MuzzleLocation->GetComponentTransform()+CollisionTransform, OwningPlayer, GetInstigator());
 		if(ProjectileParent)
 		{
 			if(FireSound)
@@ -63,11 +64,14 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 				UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
 			}
 			ProjectileParent->SetProjectileLifespan(ProjectileLifeTime);
-			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetOwnersName(OwnersName);
-			ProjectileParent->SetInstigator(GetInstigator());
+			ProjectileParent->OwningPlayer = OwningPlayer;	// let the projectile know what the owning inventory is
+
+			// Finish spawning actor now
+			UGameplayStatics::FinishSpawningActor(ProjectileParent, MuzzleLocation->GetComponentTransform()+CollisionTransform);
+			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 		}
 		// play our screen shake
 		PlayerCameraShake(ModFireShake, 1.0f);
