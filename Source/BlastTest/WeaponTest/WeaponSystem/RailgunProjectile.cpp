@@ -19,6 +19,14 @@ ARailgunProjectile::ARailgunProjectile()
 void ARailgunProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!HasAuthority())	// if we arent the server then dont continue
+		return;
+	if (!OwningPlayer)		// make sure we have our owning player set
+		{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString("Projectile Owning Player not set!"));
+		return;
+		}
 	if (OtherActor->Tags.Contains("Player") && OtherActor->GetName() == GetInstigator()->GetName())
 	{
 		return;	// we are hitting ourselves when the projectile spawns
