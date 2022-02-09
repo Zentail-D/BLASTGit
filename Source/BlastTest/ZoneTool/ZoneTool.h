@@ -10,6 +10,7 @@
 #include "AIEnemyParent.h"
 #include "PatrollingPath.h"
 #include "AI/Flying/Navigation/NavigationVolumeForAI3D.h"
+#include "Generator.h"
 #include "ZoneTool.generated.h"
 
 class AZoneToolCon;
@@ -133,6 +134,9 @@ public:
 
 	/**Max amount of enemies allowed to be in this zone at one time*/
 	int32 MaxEnemyCount;
+
+	/**Array of of refs to the Generators spawned in the Zone*/
+	TArray<AGenerator*> GensInZone;
 
 	
 protected:
