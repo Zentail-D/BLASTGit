@@ -15,7 +15,6 @@ class ADefaultAmmo : public AModParent
 	GENERATED_BODY()
 	public:
 	ADefaultAmmo();
-	~ADefaultAmmo();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	/**
