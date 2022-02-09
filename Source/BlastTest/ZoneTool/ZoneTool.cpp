@@ -208,6 +208,15 @@ void AZoneTool::SetNeighborsActive()
 	}
 }
 
+void AZoneTool::SpawnGenerator()
+{
+	for(int i = 0; i <= GenLocations.Num()-1;i++)
+	{
+		FVector Location = this->GetActorLocation() + GenLocations[i];
+		GetWorld()->SpawnActor<AActor>(GenClass, Location,FRotator(0,0,0),EnemyPara);
+	}
+}
+
 void AZoneTool::CreateSpawners()
 {
 	
