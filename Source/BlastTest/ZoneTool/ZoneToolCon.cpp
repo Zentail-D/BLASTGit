@@ -39,14 +39,8 @@ void AZoneToolCon::BeginPlay()
 	{
 		AssignNeighborZones(i,2);
 	}
-	/*
-	for(int32 i =0; i < Players.Num(); i++)
-	{
-		//need to change this to player class
-		if(Players[i]->ActorHasTag("Player"))
-			PlayersInWorld.Add(Cast<ACharacter>(Players[i]));
-	}
-	*/
+
+	this->SpawnGenrators();
 }
 
 void AZoneToolCon::SetMaxEnemyCount(int32 NewMaxEnemyCount)
@@ -134,6 +128,14 @@ void AZoneToolCon::AddPlayer(ACharacter* NewPlayer)
 		{
 			PlayersInWorld.Add(NewPlayer);
 		}
+}
+
+void AZoneToolCon::SpawnGenrators()
+{
+	for(int i = 0; i <= Zones.Num()-1;i++)
+	{
+		Zones[i]->SpawnGenerator();
+	}
 }
 
 

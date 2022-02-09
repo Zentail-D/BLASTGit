@@ -44,6 +44,7 @@ public:
 
 	/**the amount of players in all zones*/
 	int32 NumPlayersInZones;
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -82,5 +83,8 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void AddPlayer(ACharacter* NewPlayer);
+
+	/** Spawns generators at the locations of the points from the zones */
+	void SpawnGenrators();
 
 };
