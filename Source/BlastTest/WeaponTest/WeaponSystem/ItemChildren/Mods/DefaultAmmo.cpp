@@ -19,6 +19,11 @@ ADefaultAmmo::ADefaultAmmo()
 
 }
 
+ADefaultAmmo::~ADefaultAmmo()
+{
+	GEngine->
+}
+
 void ADefaultAmmo::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
