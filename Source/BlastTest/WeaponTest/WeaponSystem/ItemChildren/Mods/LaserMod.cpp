@@ -42,16 +42,17 @@ void ALaserMod::Tick(float DeltaTime)
 			{
 				// set the base of our laser to muzzle since player is probably moving
 				ProjectileVfxNiagaraComponent->SetWorldLocation(PlayerMuzzleComponent->GetComponentLocation());
+				ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",PlayerMuzzleComponent->GetComponentLocation() + GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange);
 				// trace params required for line trace, ignore actor prevents from hitting itself
 				FCollisionQueryParams TraceParams(FName(TEXT("Enemy")), true, GetInstigator());
 				// initialize hit info
 				FHitResult HitResult;
 				// do trace
 				
-				const bool HadHit = GetWorld()->LineTraceSingleByChannel(
+				bool HadHit = GetWorld()->LineTraceSingleByChannel(
 					HitResult,
 					PlayerMuzzleComponent->GetComponentLocation(),
-					PlayerMuzzleComponent->GetComponentLocation()+GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange,
+					PlayerMuzzleComponent->GetComponentLocation() + GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange,
 					ECC_Visibility,
 					TraceParams);
 
@@ -62,7 +63,7 @@ void ALaserMod::Tick(float DeltaTime)
 				if(HadHit)
 				{
 					ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",HitResult.ImpactPoint);
-					GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, FString("Hit"));
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString("Hit"));
 					
 					GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, HitResult.ImpactPoint.ToString());
 					if (HitResult.Actor->ActorHasTag("Enemy") && CanDealDamage)
@@ -85,7 +86,7 @@ void ALaserMod::Tick(float DeltaTime)
 						Player->DealDamageToPlayer(ProjectileDamage);
 						GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
 					}
-					Destroy();
+					//Destroy();
 				}
 				else
 				{
@@ -102,6 +103,7 @@ void ALaserMod::Tick(float DeltaTime)
 	if (AmmoCount <= 0.0)
 	{
 		bReadyToDestroy = true;
+		bLaserFiring = false;
 		ProjectileVfxNiagaraComponent->DestroyInstance();
 	}
 }
