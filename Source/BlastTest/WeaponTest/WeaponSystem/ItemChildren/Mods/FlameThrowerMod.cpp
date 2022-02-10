@@ -164,6 +164,18 @@ void AFlameThrowerMod::Tick(float DeltaSeconds)
 	 */
 	if(this->AmmoCount <= 0)
 	{
+		if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+		{
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.1,0);
+			}
+			if(OutOfAmmoSound)
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(OutOfAmmoSound);
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+			}
+		}
 		this->bReadyToDestroy = true;
 		ProjectileVfxNiagaraComponent->Deactivate();
 	}

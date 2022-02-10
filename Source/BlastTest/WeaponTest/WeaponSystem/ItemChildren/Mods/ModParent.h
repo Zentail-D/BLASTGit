@@ -180,6 +180,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	USoundBase* ReleaseSound;
 
+	/**
+	* OutOfAmmo Sound to play
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
+	USoundBase* OutOfAmmoSound;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	float MinimumTraceThreshold = 1000.f;
 
