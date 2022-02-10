@@ -50,9 +50,19 @@ void ARailGunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 	{
 		OwnerName = OwnersName;
 	}
-	if(FireSound)
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+		if(FireSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
 	}
 	bIsCharging=true;
 }
@@ -76,9 +86,19 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 		if(ProjectileParent)
 		{
 			
-			if(ReleaseSound)
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 			{
-				UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
+				if(ReleaseSound)
+				{
+					//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(ReleaseSound);
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+				}
 			}
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);

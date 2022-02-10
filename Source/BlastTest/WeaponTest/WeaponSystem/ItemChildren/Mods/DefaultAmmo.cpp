@@ -59,9 +59,19 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 		AProjectileParent* ProjectileParent = GetWorld()->SpawnActorDeferred<AProjectileParent>(ProjectileClass,MuzzleLocation->GetComponentTransform()+CollisionTransform, OwningPlayer, GetInstigator());
 		if(ProjectileParent)
 		{
-			if(FireSound)
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 			{
-				UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+				if(FireSound)
+				{
+					//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+				}
 			}
 			ProjectileParent->SetProjectileLifespan(ProjectileLifeTime);
 			ProjectileParent->SetDamageAmount(ProjectileDamage);

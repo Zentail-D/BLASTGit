@@ -116,9 +116,19 @@ void ALaserMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComp
 		OwnerName = OwnersName;
 	}
 	
-	if(FireSound)	// play sound if possible
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+		if(FireSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
 	}
 	bLaserFiring = true;	// Tick can know that
 	// GRAB OUT CAMERA AND MUZZLE SO WE CAN REFERENCE THEM IN THE TICK
@@ -146,9 +156,19 @@ void ALaserMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMeshC
 	{
 		ProjectileVfxNiagaraComponent->DestroyInstance();
 	}
-	if(ReleaseSound)
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
+		if(ReleaseSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(ReleaseSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->Play();
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No ReleaseSound");
+		}
 	}
 }
 

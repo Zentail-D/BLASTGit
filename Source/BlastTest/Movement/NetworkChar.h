@@ -7,6 +7,7 @@
 #include "InventoryComponent.h"
 #include "GameFramework/Character.h"
 #include "ZoneTool/ZoneToolCon.h"
+#include "Components/AudioComponent.h"
 #include "NetworkChar.generated.h"
 
 
@@ -20,6 +21,9 @@ public:
 	/** reference to the player inventory component */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInventoryComponent* PlayerInventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAudioComponent* AudioComponent;
 
 	/**Force the player to respawn by clicking button in editor*/
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Respawn")

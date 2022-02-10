@@ -4,6 +4,7 @@
 #include "WeaponTest/WeaponSystem/ItemChildren/Mods/RocketLauncherMod.h"
 #include "Kismet/GameplayStatics.h"
 #include "WeaponTest/WeaponSystem/RocketProjectile.h"
+#include "NetworkChar.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 ARocketLauncherMod::ARocketLauncherMod()
@@ -62,9 +63,19 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 		if(ProjectileParent)
 		{
 			
-			if(FireSound)
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 			{
-				UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+				if(FireSound)
+				{
+					//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+				}
 			}
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);

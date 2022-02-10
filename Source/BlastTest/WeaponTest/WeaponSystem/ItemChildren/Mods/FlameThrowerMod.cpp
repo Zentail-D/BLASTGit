@@ -38,9 +38,19 @@ void AFlameThrowerMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticM
 
 	/***Sound effect on fire
 	 */
-	if(FireSound)
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+		if(FireSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
 	}
 }
 
@@ -64,10 +74,20 @@ void AFlameThrowerMod::ActiveModRelease(UCameraComponent* CameraComponent, UStat
 
 	/*** Sound effect on release
 	 */
-	//if(ReleaseSound)
-	//{
-	//	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
-	//}
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+	{
+		if(FireSound)
+		{
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.5f,0);
+			}
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
+	}
 }
 
 

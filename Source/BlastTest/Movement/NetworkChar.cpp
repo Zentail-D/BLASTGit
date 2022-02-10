@@ -23,7 +23,12 @@ ANetworkChar::ANetworkChar(const class FObjectInitializer& ObjectInitializer)
 	{
 		PlayerInventory= CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 	}
-	
+
+	if(!AudioComponent)
+	{
+		AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+
+	}
 		
 }
 
