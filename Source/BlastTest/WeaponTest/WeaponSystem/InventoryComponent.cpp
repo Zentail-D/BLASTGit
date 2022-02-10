@@ -316,12 +316,14 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 					ModSlot1 = NewMod;
 					ModSlot1->bNeverDestroy = true;
 					ModSlot1->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot1->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
 				} else if (!ModSlot2)	// if mod slot 2 is empty then add new mod to that slot
 				{
 					ModSlot2 = NewMod;
 					ModSlot2->bNeverDestroy = true;
 					ModSlot2->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot2->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
 				} else
 				{
@@ -336,6 +338,7 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 					ModSlot2 = NewMod;
 					ModSlot2->bNeverDestroy = true;
 					ModSlot2->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot2->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
 				} else
 				{
@@ -350,6 +353,7 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 					ModSlot1 = NewMod;
 					ModSlot1->bNeverDestroy = true;
 					ModSlot1->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot1->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
 				} else
 				{
