@@ -42,16 +42,17 @@ void ALaserMod::Tick(float DeltaTime)
 			{
 				// set the base of our laser to muzzle since player is probably moving
 				ProjectileVfxNiagaraComponent->SetWorldLocation(PlayerMuzzleComponent->GetComponentLocation());
+				ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",PlayerMuzzleComponent->GetComponentLocation() + GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange);
 				// trace params required for line trace, ignore actor prevents from hitting itself
 				FCollisionQueryParams TraceParams(FName(TEXT("Enemy")), true, GetInstigator());
 				// initialize hit info
 				FHitResult HitResult;
 				// do trace
 				
-				const bool HadHit = GetWorld()->LineTraceSingleByChannel(
+				bool HadHit = GetWorld()->LineTraceSingleByChannel(
 					HitResult,
 					PlayerMuzzleComponent->GetComponentLocation(),
-					PlayerMuzzleComponent->GetComponentLocation()+GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange,
+					PlayerMuzzleComponent->GetComponentLocation() + GetFireDirection(PlayerCameraComponent, PlayerMuzzleComponent)*LaserRange,
 					ECC_Visibility,
 					TraceParams);
 
@@ -62,7 +63,7 @@ void ALaserMod::Tick(float DeltaTime)
 				if(HadHit)
 				{
 					ProjectileVfxNiagaraComponent->SetVectorParameter("User.End",HitResult.ImpactPoint);
-					GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, FString("Hit"));
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString("Hit"));
 					
 					GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, HitResult.ImpactPoint.ToString());
 					if (HitResult.Actor->ActorHasTag("Enemy") && CanDealDamage)
@@ -85,7 +86,7 @@ void ALaserMod::Tick(float DeltaTime)
 						Player->DealDamageToPlayer(ProjectileDamage);
 						GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
 					}
-					Destroy();
+					//Destroy();
 				}
 				else
 				{
@@ -101,7 +102,20 @@ void ALaserMod::Tick(float DeltaTime)
 	}
 	if (AmmoCount <= 0.0)
 	{
+		if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+		{
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.1,0);
+			}
+			if(OutOfAmmoSound)
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(OutOfAmmoSound);
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+			}
+		}
 		bReadyToDestroy = true;
+		bLaserFiring = false;
 		ProjectileVfxNiagaraComponent->DestroyInstance();
 	}
 }
@@ -114,9 +128,19 @@ void ALaserMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComp
 		OwnerName = OwnersName;
 	}
 	
-	if(FireSound)	// play sound if possible
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+		if(FireSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
 	}
 	bLaserFiring = true;	// Tick can know that
 	// GRAB OUT CAMERA AND MUZZLE SO WE CAN REFERENCE THEM IN THE TICK
@@ -144,9 +168,26 @@ void ALaserMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMeshC
 	{
 		ProjectileVfxNiagaraComponent->DestroyInstance();
 	}
-	if(ReleaseSound)
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
+		if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+		{
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.1,0);
+		}
+	}
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+	{
+		if(ReleaseSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(ReleaseSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->Play();
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No ReleaseSound");
+		}
 	}
 }
 

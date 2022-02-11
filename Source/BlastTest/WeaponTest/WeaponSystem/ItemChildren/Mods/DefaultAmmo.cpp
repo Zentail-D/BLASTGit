@@ -51,22 +51,37 @@ void ADefaultAmmo::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshC
 		ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(),GetFireDirection(CameraComponent, MuzzleLocation).Rotation());
 		ProjectileVfxNiagaraComponent->SetFloatParameter("User.Lifetime",ProjectileLifeTime);
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
-		
+		FVector CollisionVector = GetFireDirection(CameraComponent, MuzzleLocation)*-1;
+		CollisionVector*= ProjectileMuzzleOffset;
+		FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Instigator=GetInstigator();
-		AProjectileParent* ProjectileParent = GetWorld()->SpawnActor<AProjectileParent>(ProjectileClass,CameraComponent->GetComponentLocation(), FRotator(0,0,0), SpawnParams);
+		AProjectileParent* ProjectileParent = GetWorld()->SpawnActorDeferred<AProjectileParent>(ProjectileClass,MuzzleLocation->GetComponentTransform()+CollisionTransform, OwningPlayer, GetInstigator());
 		if(ProjectileParent)
 		{
-			if(FireSound)
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 			{
-				UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+				if(FireSound)
+				{
+					//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+				}
 			}
 			ProjectileParent->SetProjectileLifespan(ProjectileLifeTime);
-			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetOwnersName(OwnersName);
-			ProjectileParent->SetInstigator(GetInstigator());
+			ProjectileParent->OwningPlayer = OwningPlayer;	// let the projectile know what the owning inventory is
+
+			// Finish spawning actor now
+			UGameplayStatics::FinishSpawningActor(ProjectileParent, MuzzleLocation->GetComponentTransform()+CollisionTransform);
+			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 		}
 		// play our screen shake
 		PlayerCameraShake(ModFireShake, 1.0f);

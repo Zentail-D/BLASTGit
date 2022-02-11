@@ -3,6 +3,7 @@
 
 #include "WeaponTest/WeaponSystem/InventoryComponent.h"
 
+#include "NetworkChar.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
@@ -15,7 +16,6 @@ UInventoryComponent::UInventoryComponent()
 	// set our current health to max at start
 	CurrentPlayerHealth = MaxPlayerHealth;
 	
-	SetIsReplicated(true);
 }
 
 void UInventoryComponent::PickupItem(AItemParent* ItemToPickup)
@@ -191,6 +191,7 @@ void UInventoryComponent::BeginPlay()
 		DefaultMod->bNeverDestroy = true;
 		DefaultMod->bIsDefaultMod = true;
 		DefaultMod->MeshComponent->DestroyComponent();
+		DefaultMod->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 	}
 
 	// set our owning characters name
@@ -218,7 +219,6 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick Tick, FActor
 			UpdateActiveMod();
 		}
 	}
-		
 	// update our active mod ammo count
 	switch(ActiveModSlot)
 	{
@@ -233,8 +233,6 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick Tick, FActor
 			if (ModSlot1)
 			{
 				ActiveModAmmoCount = FString::FromInt(ModSlot1->GetCurrentAmmoCount());
-				GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Blue, FVector(ModSlot1->bReadyToDestroy).ToString());
-	
 			}
 			break;
 		}
@@ -318,17 +316,54 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 					ModSlot1 = NewMod;
 					ModSlot1->bNeverDestroy = true;
 					ModSlot1->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot1->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString("pickup into slot 1"));
+					//Play sound
+					if(SuccessfulPickupSound)
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Pickup");
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetWorldLocation(GetOwner()->GetActorLocation());
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetSound(SuccessfulPickupSound);
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Sound Null");
+					}
 				} else if (!ModSlot2)	// if mod slot 2 is empty then add new mod to that slot
 				{
 					ModSlot2 = NewMod;
 					ModSlot2->bNeverDestroy = true;
 					ModSlot2->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot2->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
+					//Play sound
+					if(SuccessfulPickupSound)
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Pickup");
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetWorldLocation(GetOwner()->GetActorLocation());
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetSound(SuccessfulPickupSound);
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Sound Null");
+					}
 				} else
 				{
 					NewMod->Destroy();	// if somehow we end up here we destroy the mod
+					//Play sound
+					if(FailedPickupSound)
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No Pickup");
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetWorldLocation(GetOwner()->GetActorLocation());
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetSound(FailedPickupSound);
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Sound Null");
+					}
 				}
 				break;
 			}
@@ -339,10 +374,35 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 					ModSlot2 = NewMod;
 					ModSlot2->bNeverDestroy = true;
 					ModSlot2->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot2->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
+					//Play sound
+					if(SuccessfulPickupSound)
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Pickup");
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetWorldLocation(GetOwner()->GetActorLocation());
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetSound(SuccessfulPickupSound);
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Sound Null");
+					}
 				} else
 				{
 					NewMod->Destroy();	// we have not empty mod slots
+					//Play sound
+					if(FailedPickupSound)
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No Pickup");
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetWorldLocation(GetOwner()->GetActorLocation());
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetSound(FailedPickupSound);
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Sound Null");
+					}
 				}
 				break;
 			}
@@ -353,10 +413,35 @@ void UInventoryComponent::PickupMod(AModParent* NewMod)
 					ModSlot1 = NewMod;
 					ModSlot1->bNeverDestroy = true;
 					ModSlot1->SetInstigator(GetOwner()->GetInstigator());
+					ModSlot1->OwningPlayer = Cast<ANetworkChar>(GetOwner());
 					NewMod->MeshComponent->DestroyComponent();	// make sure to get rid of the MeshComponent
+					//Play sound
+					if(SuccessfulPickupSound)
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Pickup");
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetWorldLocation(GetOwner()->GetActorLocation());
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetSound(SuccessfulPickupSound);
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Sound Null");
+					}
 				} else
 				{
 					NewMod->Destroy();	// we have no empty mod slots
+					//Play sound
+					if(FailedPickupSound)
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No Pickup");
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetWorldLocation(GetOwner()->GetActorLocation());
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->SetSound(FailedPickupSound);
+						Cast<ANetworkChar>(GetOwner())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Sound Null");
+					}
 				}
 				break;
 			}

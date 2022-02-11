@@ -39,6 +39,18 @@ void ARailGunMod::Tick(float DeltaTime)
 	}
 	if(AmmoCount<=0)
 	{
+		if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+		{
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.1,0);
+			}
+			if(OutOfAmmoSound)
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(OutOfAmmoSound);
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+			}
+		}
 		bReadyToDestroy=true;
 	}
 }
@@ -50,9 +62,19 @@ void ARailGunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 	{
 		OwnerName = OwnersName;
 	}
-	if(FireSound)
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+		if(FireSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
 	}
 	bIsCharging=true;
 }
@@ -68,15 +90,27 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 		ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(),GetFireDirection(CameraComponent, MuzzleLocation).Rotation());
 		ProjectileVfxNiagaraComponent->SetFloatParameter("User.Lifetime", ProjectileLifeTime);
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity", FVector(ProjectileSpeed, 0.f, 0.f));
-
-		AProjectileParent* ProjectileParent = GetWorld()->SpawnActorDeferred<AProjectileParent>(ProjectileClass, CameraComponent->GetComponentTransform(), GetOwner(), GetInstigator());
+		FVector CollisionVector = GetFireDirection(CameraComponent, MuzzleLocation)*-1;
+		CollisionVector*= ProjectileMuzzleOffset;
+		FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
+		AProjectileParent* ProjectileParent = GetWorld()->SpawnActorDeferred<AProjectileParent>(ProjectileClass, MuzzleLocation->GetComponentTransform()+CollisionTransform, GetOwner(), GetInstigator());
 		
 		if(ProjectileParent)
 		{
 			
-			if(ReleaseSound)
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 			{
-				UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
+				if(ReleaseSound)
+				{
+					//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(ReleaseSound);
+					Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+				}
 			}
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);
@@ -84,7 +118,7 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 			ProjectileParent->SetInstigator(GetInstigator());
 
 			// Finish spawning actor now
-			UGameplayStatics::FinishSpawningActor(ProjectileParent, CameraComponent->GetComponentTransform());
+			UGameplayStatics::FinishSpawningActor(ProjectileParent, MuzzleLocation->GetComponentTransform()+CollisionTransform);
 			// we fire in direction after the actor is officially spawned
 			ProjectileParent->FireInDirection(CameraComponent->GetComponentRotation().Vector());
 		}

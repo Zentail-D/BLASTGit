@@ -3,7 +3,7 @@
 
 
 #include "WeaponTest/WeaponSystem/ItemChildren/Mods/FlameThrowerMod.h"
-
+#include "NetworkChar.h"
 #include "FlamethrowerProjectile.h"
 
 AFlameThrowerMod::AFlameThrowerMod()
@@ -25,7 +25,7 @@ void AFlameThrowerMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticM
 	/*** Set VFX to run
 	 */
 	ProjectileVfxNiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ProjectileVFXNiagaraSystem,MuzzleLocation->GetComponentLocation(), CameraComponent->GetComponentRotation());
-
+	
 	/*** Save the initial values that were passed into this function
 	 */
 	this->SavedCameraComponent = CameraComponent;
@@ -38,9 +38,19 @@ void AFlameThrowerMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticM
 
 	/***Sound effect on fire
 	 */
-	if(FireSound)
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+		if(FireSound)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+			Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
 	}
 }
 
@@ -64,10 +74,20 @@ void AFlameThrowerMod::ActiveModRelease(UCameraComponent* CameraComponent, UStat
 
 	/*** Sound effect on release
 	 */
-	//if(ReleaseSound)
-	//{
-	//	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReleaseSound, MuzzleLocation->GetComponentLocation());
-	//}
+	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+	{
+		if(FireSound)
+		{
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.5f,0);
+			}
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+		}
+	}
 }
 
 
@@ -98,16 +118,26 @@ void AFlameThrowerMod::Tick(float DeltaSeconds)
 			if(this->SavedCameraComponent)
 			{
 				FActorSpawnParameters SpawnParams;
-				SpawnParams.Owner = GetOwner();
-				SpawnParams.Instigator=GetInstigator();
-				AFlamethrowerProjectile* OurFlameProjectile = GetWorld()->SpawnActor<AFlamethrowerProjectile>(ProjectileClass,SavedMuzzleLocation->GetComponentLocation(), FRotator(0,0,0), SpawnParams);
-				if(OurFlameProjectile)
-				{
-					OurFlameProjectile->SetDamageAmount(ProjectileDamage);
-					OurFlameProjectile->FireInDirection(SavedCameraComponent->GetComponentRotation().Vector());
-					OurFlameProjectile->SetLifeSpan(ProjectileLifeTime);
-					OurFlameProjectile->SetInstigator(GetInstigator());
+				//SpawnParams.Owner = GetOwner();
+				//SpawnParams.Instigator=GetInstigator();
+				//AFlamethrowerProjectile* OurFlameProjectile = GetWorld()->SpawnActor<AFlamethrowerProjectile>(ProjectileClass,SavedMuzzleLocation->GetComponentLocation(), FRotator(0,0,0), SpawnParams);
 
+				FVector CollisionVector = GetFireDirection(SavedCameraComponent, SavedMuzzleLocation)*-1;
+				CollisionVector*= ProjectileMuzzleOffset;
+				FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
+				AFlamethrowerProjectile* ProjectileParent = GetWorld()->SpawnActorDeferred<AFlamethrowerProjectile>(ProjectileClass,SavedMuzzleLocation->GetComponentTransform()+CollisionTransform, OwningPlayer, GetInstigator());
+				if(ProjectileParent)
+				{
+					ProjectileParent->SetDamageAmount(ProjectileDamage);
+					ProjectileParent->FireInDirection(SavedCameraComponent->GetComponentRotation().Vector());
+					ProjectileParent->SetLifeSpan(ProjectileLifeTime);
+					ProjectileParent->SetInstigator(GetInstigator());
+					ProjectileParent->OwningPlayer = OwningPlayer;	// let the projectile know what the owning inventory is
+
+					// Finish spawning actor now
+					UGameplayStatics::FinishSpawningActor(ProjectileParent, SavedMuzzleLocation->GetComponentTransform()+CollisionTransform);
+					ProjectileParent->FireInDirection(SavedCameraComponent->GetComponentRotation().Vector());
+					
 					if (!bIsDefaultMod)
 						this->AmmoCount -= 1;
 					this->RateOfFlames = this->RateOfFlamesReset;
@@ -134,6 +164,18 @@ void AFlameThrowerMod::Tick(float DeltaSeconds)
 	 */
 	if(this->AmmoCount <= 0)
 	{
+		if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+		{
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.1,0);
+			}
+			if(OutOfAmmoSound)
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(OutOfAmmoSound);
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+			}
+		}
 		this->bReadyToDestroy = true;
 		ProjectileVfxNiagaraComponent->Deactivate();
 	}

@@ -10,6 +10,7 @@
 #include "AIEnemyParent.h"
 #include "PatrollingPath.h"
 #include "AI/Flying/Navigation/NavigationVolumeForAI3D.h"
+#include "Generator.h"
 #include "ZoneTool.generated.h"
 
 class AZoneToolCon;
@@ -59,7 +60,7 @@ public:
 	TArray<FVector> GruntSpawnerLocations;
 
 	/**Array of vectors that the generators can spawn at*/
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Spawns, meta=(MakeEditWidget= true))
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Generator, meta=(MakeEditWidget= true))
 	TArray<FVector> GenLocations;
 
 	/**Array of enemy classes to be spawned in this zone*/
@@ -134,8 +135,8 @@ public:
 	/**Max amount of enemies allowed to be in this zone at one time*/
 	int32 MaxEnemyCount;
 
-
-
+	/**Array of of refs to the Generators spawned in the Zone*/
+	TArray<AGenerator*> GensInZone;
 
 	
 protected:
@@ -160,6 +161,10 @@ protected:
 	/**Reference to  enemy set in blueprint class*/
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category="Spawns|Classes")
 	TSubclassOf<class AAIEnemyParent> Grunt;
+
+	/**Reference to the Generator class set in blueprint*/
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category="Generator")
+	TSubclassOf<AActor> GenClass;
 	
 
 	/**Array of references to all the spawners made by this zone*/
@@ -189,6 +194,7 @@ public:
 
 	/**@return the reference to the class of the Grunt enemy*/
 	inline TSubclassOf<class AAIEnemyParent> getGruntClass(){ return Grunt;}
+	
 
 	
 	// Called every frame
@@ -201,6 +207,9 @@ public:
 
 	/**method that sets all of the zones in the Neighbor Array to active*/
 	void SetNeighborsActive();
+
+	/**Spawns Genrators at all given points*/
+	void SpawnGenerator();
 
 private:
 	/**Creates AZoneSpawner at each of the FVectors in the SpawnerLocation Array */

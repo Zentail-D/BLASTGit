@@ -74,6 +74,9 @@ public:
 	/** boolean used to determine weather the mod is default. If so we dont take away from its ammo */
 	bool bIsDefaultMod = false;
 
+	/* owning inventory reference*/
+	class ANetworkChar* OwningPlayer;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -126,7 +129,11 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	float ProjectileLifeTime;
-	
+	/**
+	* The amount that the collision box "lags" behind the VFX
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
+	float ProjectileMuzzleOffset;
 	/**
 	 * For later implementation for status effect if needed
 	 */
@@ -173,6 +180,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	USoundBase* ReleaseSound;
 
+	/**
+	* OutOfAmmo Sound to play
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
+	USoundBase* OutOfAmmoSound;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Settings | Mod Settings", meta = (AllowProtectedAccess = "true"))
 	float MinimumTraceThreshold = 1000.f;
 

@@ -37,6 +37,18 @@ void AShotgunMod::Tick(float DeltaTime)
 	}
 	if(AmmoCount<=0)
 	{
+		if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
+		{
+			if(Cast<ANetworkChar>(GetInstigator())->AudioComponent->IsPlaying())
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeOut(0.1,0);
+			}
+			if(OutOfAmmoSound)
+			{
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(OutOfAmmoSound);
+				Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+			}
+		}
 		bReadyToDestroy = true;
 	}
 }
@@ -58,6 +70,10 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 		ProjectileVfxNiagaraComponent->SetVectorParameter("User.Velocity",FVector(ProjectileSpeed, 0.f, 0.f));
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Instigator=GetInstigator();
+		FVector CollisionVector = GetFireDirection(CameraComponent, MuzzleLocation)*-1;
+		CollisionVector*= ProjectileMuzzleOffset;
+		FTransform CollisionTransform =FTransform(FRotator(0,0,0),CollisionVector,FVector(0,0,0)); 
+
 		//spawn each projectile collision box
 		for(int i = 0; i<projectilesToSpawn; i++)
 		{
@@ -66,18 +82,33 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 			float y=FMath::RandRange(MinYSpread/6,MaxYSpread/6);
 			float z=FMath::RandRange(MinZSpread/6,MaxZSpread/6);
 			FVector spread = FVector( x, y,z );
+			
+		
 
-			AShotgunProjectile* ShotgunProjectile = GetWorld()->SpawnActor<AShotgunProjectile>(ProjectileClass,MuzzleLocation->GetComponentLocation(), FRotator(0,0,0), SpawnParams);
+			AShotgunProjectile* ShotgunProjectile = GetWorld()->SpawnActorDeferred<AShotgunProjectile>(ProjectileClass,MuzzleLocation->GetComponentTransform()+CollisionTransform, GetOwner(), GetInstigator());
 			if(ShotgunProjectile)
 			{
-				if(FireSound)
+				if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 				{
-					UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleLocation->GetComponentLocation());
+					if(FireSound)
+					{
+						//GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"Firing");
+						Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetWorldLocation(GetInstigator()->GetActorLocation());
+						Cast<ANetworkChar>(GetInstigator())->AudioComponent->SetSound(FireSound);
+						Cast<ANetworkChar>(GetInstigator())->AudioComponent->FadeIn(0.1f);
+					}
+					else
+					{
+						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
+					}
 				}
-				ShotgunProjectile->FireInDirection(CameraComponent->GetComponentRotation().Vector()+spread);
+				
 				ShotgunProjectile->SetDamageAmount(ProjectileDamage);
 				ShotgunProjectile->SetImpulsePower(ProjectileImpulse);
 				ShotgunProjectile->SetInstigator(GetInstigator());
+				// Finish spawning actor now
+				UGameplayStatics::FinishSpawningActor(ShotgunProjectile, MuzzleLocation->GetComponentTransform()+CollisionTransform);
+				ShotgunProjectile->FireInDirection(CameraComponent->GetComponentRotation().Vector()+spread);
 			}
 			// play our screen shake
 			PlayerCameraShake(ModFireShake, 1.0f);

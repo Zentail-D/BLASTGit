@@ -34,6 +34,9 @@ public:
 	*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = Movement)
 	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	class ANetworkChar* OwningPlayer;
+	
 	/**
 	 * Turns the debug box for the collision component on and off
 	 */
