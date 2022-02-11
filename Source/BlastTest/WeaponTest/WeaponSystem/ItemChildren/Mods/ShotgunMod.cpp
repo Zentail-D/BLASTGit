@@ -102,7 +102,7 @@ void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshCo
 						GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
 					}
 				}
-				
+				ShotgunProjectile->OwningPlayer = OwningPlayer;	// let the projectile know what the owning inventory is
 				ShotgunProjectile->SetDamageAmount(ProjectileDamage);
 				ShotgunProjectile->SetImpulsePower(ProjectileImpulse);
 				ShotgunProjectile->SetInstigator(GetInstigator());

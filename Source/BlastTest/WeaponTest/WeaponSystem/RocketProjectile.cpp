@@ -22,6 +22,9 @@ ARocketProjectile::ARocketProjectile()
 		CollisionComponent->OnComponentBeginOverlap.Clear();
 		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ARocketProjectile::OnOverlap);
 	}
+	//bounce implementation?
+	ProjectileMovementComponent->bShouldBounce=true;
+	ProjectileMovementComponent->Bounciness=1;
 }
 
 void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -48,7 +51,7 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	{
 		return;
 	}
-	
+
 	//get list of all actors affected by the aoe 
 	TArray<AActor*> OverlappedActors;
 	SphereCollider->GetOverlappingActors(OverlappedActors);
@@ -85,11 +88,13 @@ void ARocketProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange, FString("Hit Player"));
 		}
 	}
-	
-	// destroy self after dealing with first collision
-	CollisionComponent->Deactivate();
-	SphereCollider->Deactivate();
-	Destroy();
+	if(OtherActor->Tags.Contains("Player")||OtherActor->Tags.Contains("Enemy"))
+	{
+		// destroy self after dealing with first collision
+		CollisionComponent->Deactivate();
+		SphereCollider->Deactivate();
+		Destroy();
+	}
 }
 
 void ARocketProjectile::SetExplosionRadius(float NewExplosionRadius)
