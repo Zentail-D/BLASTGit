@@ -57,11 +57,9 @@ void UBTTask_GruntMoveToPatrolPoint::TickTask(UBehaviorTreeComponent& OwnerComp,
 		// The patrol point we are moving to
 		const FVector TargetLocation = Controller->GetBlackboard()->GetValueAsVector(CurrentTargetLocation.SelectedKeyName);
 		// Get our current location
-		const FVector CurrentLocation = GruntAI->GetTransform().GetLocation();
 		// get our distance to location
-		const float DistanceToLocation = (TargetLocation - CurrentLocation).Size();
 		// if within our move to tolerance plus some extra to account for point being low to player
-		if (DistanceToLocation <= GruntAI->GetMoveToTolerance()+100)
+		if (Controller->GetPathFollowingComponent()->DidMoveReachGoal())
 		{
 			// set our blackboard to get a new patrol point to move to
 			Controller->GetBlackboard()->SetValueAsBool(NeedNewPatrolPoint.SelectedKeyName, true);

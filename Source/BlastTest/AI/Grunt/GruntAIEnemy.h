@@ -18,11 +18,14 @@ public:
 	/** constructor that just runs when ai is made */
 	AGruntAIEnemy();
 
-	/** The enum class for the attacking states that the enemy can be in */
-	enum AttackStates {Patrolling, Approaching, Strafing, Shooting};
+	/** boolean to tell the grunt to fire*/
+	bool bFireBurst=false;
 
-	/** true if the grunt is moving to a point during attack */
-	bool IsGruntMoving = false;
+	/** boolean to tell the grunt it has fire queued*/
+	bool bQueuedFire=false;
+
+	/** boolean to tell the grunt it fire has completed the queue and is ready to fire a burst*/
+	bool bReadyToFire=true;
 
 	/** The angle range between for the strafing (note: if you put 45 the range will be 90 degress */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Debug Settings", meta = (AllowProtectedAccess = "true"))
@@ -36,9 +39,6 @@ public:
 
 	/** SETTERS */
 
-	/** Set the current attack state for the enemy */
-	inline void SetAttackingState(const AttackStates State) { CurrentAttackState = State; }
-
 	/** Sets the current attacking destination */
 	inline void SetCurrentAttackingDestination(const FVector Location) { CurrentAttackingDestination = Location; }
 
@@ -49,15 +49,11 @@ public:
 	inline void SetCurrentTargetPlayerIndex(const int Index) { CurrentTargetPlayerIndex = Index; }
 
 	/** GETTERS */
-
-	/** gives the current attack state of the grunt */
-	inline AttackStates GetCurrentAttackState() const { return CurrentAttackState; }
 	
 	/** Gives the Patrol point radius tolerance */
-	inline float GetPatrolPointRadiusTolerance() const { return PatrolPointRadiusTolerance; }
+	inline float GetPatrolPointRadiusTolerance() const { return MoveToTolerance; }
 
-	/** returns the distance to keep from the player (roughly) */
-	inline float GetDistanceToKeepFromPlayer() const { return DistanceToKeepFromPlayer; }
+	
 	
 	/** Gives the StrafeSharpnessAngle */
 	inline float GetApproachSharpnessAngle() const { return ApproachSharpnessAngle; }
@@ -76,6 +72,9 @@ public:
 
 	/** returns the distance for each move too during strafing */
 	inline float GetStrafingDistance() const { return StrafingDistance; }
+
+	/** returns the strafing subsection for the path to a location when strafing*/
+	inline float GetStrafingSubsection() const {return StrafingSubsection; }
 	
 	/** returns the point that the attacking is currently moving to or wants to move to */
 	inline FVector GetCurrentAttackingDestination() const { return CurrentAttackingDestination; }
@@ -87,18 +86,38 @@ public:
 	 * @return - the index of targeted player (will be -1 if no player to target)
 	 */
 	inline int GetCurrentTargetPlayerIndex() const { return CurrentTargetPlayerIndex; }
+	
+	/**
+	*Set a TArray of Vectors to the strafing path
+	*/
+	inline void SetStrafingPath(const TArray<FVector> NewStrafingPath) {StrafingPath=NewStrafingPath; StrafingPathIndex=0; }
+
+	/**
+	 * Increment the StrafingPathIndex if we are incrementing above the StrafingPath Len we return true for we are finish
+	 * @returns True if we are at the end of the path and false if we need to continue incrementing
+	 */
+	inline bool IncrementStrafingPathIndex() {StrafingPathIndex++; return StrafingPathIndex>=StrafingPath.Num();}
+
+	/**
+	 * Get CurrentStrafingLocation for the Grunt
+	 */
+	inline FVector GetCurrentStrafingLocation() {return StrafingPath[StrafingPathIndex];}
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category= "Projectile")
 	UStaticMeshComponent* AMuzzleLocation;
-	
-	/** Radius around each patrol point that it will find a point to move to somewhere within the circle made by the radius */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Movement Settings", meta = (AllowProtectedAccess = "true"))
-	float PatrolPointRadiusTolerance = 200.0f;
 
-	/** The distance that the enemy will stop approaching at and start strafing */
+	/** Array holding all the points that are contained in a strafe for the grunt. Amount of points are directly tied to the strafing subsections*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
-	float DistanceToKeepFromPlayer = 500.0f;
+	TArray<FVector> StrafingPath;
+
+	/** Index at which the Strafing is at*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
+	int StrafingPathIndex=0;
+	
+	/** How many points will be created between the end goal and the start for the grunt when strafing*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true", ClampMin=2))
+	int StrafingSubsection = 3;
 
 	/** Angle that determines how sharp the strafe will be (how hard the enemy turns) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
@@ -122,7 +141,7 @@ protected:
 
 	/** How far the enemy will run in the chosen direction when strafing */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
-	float StrafingDistance = 300.0f;
+	float StrafingDistance = 400.0f;
 
 	/** How long to wait between shots during burst fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
@@ -137,9 +156,6 @@ protected:
 	/** The Max number of bullets that can be shot during a burst fire (inclusive) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
 	int MaxBulletsToFire = 5;
-
-	/** The current attacking state, initialize to patrolling */
-	AttackStates CurrentAttackState = AttackStates::Patrolling;
 
 	/** The point that the enemy is currently moving to while attacking */
 	FVector CurrentAttackingDestination;

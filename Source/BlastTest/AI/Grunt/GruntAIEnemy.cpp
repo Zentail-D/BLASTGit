@@ -8,6 +8,8 @@ AGruntAIEnemy::AGruntAIEnemy()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	MoveToTolerance=200;
+	
 	// adding muzzle location
 	AMuzzleLocation= CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MuzzleLocation2"));
 	AMuzzleLocation->AttachToComponent(GetMesh(),FAttachmentTransformRules::KeepRelativeTransform);
@@ -26,41 +28,44 @@ AGruntAIEnemy::AGruntAIEnemy()
 void AGruntAIEnemy::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	switch (CurrentAttackState)
+	if(bQueuedFire)
 	{
-		case AttackStates::Shooting:
+		DecreaseAttackCooldown(DeltaSeconds);
+		if(AttackingCooldown<0)
+		{
+			bQueuedFire=false;
+			bReadyToFire=true;
+		}
+	}
+	
+	if(bFireBurst)
+	{
+		if (CalculateBulletsInBurst)	// if we need to find how many bullets for this burst find that number
+		{
+			BulletsInBurst = FMath::RandRange((int32)MinBulletsToFire, (int32)MaxBulletsToFire);
+			CalculateBulletsInBurst = false;
+		}
+		if (BulletsInBurst <= 0)	// if we fired all bullets in burst then reset appropriate values
+		{
+			CalculateBulletsInBurst = true;
+			ResetAttackCooldown();
+			ResetBurstAttackCooldown();
+			// reset back to strafing
+			NeedNewAttackingDestination = true;
+			bFireBurst=false;
+		}
+		DecreaseAttackCooldown(DeltaSeconds);	// decrease main attack cooldown
+		//GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, FVector(AttackingCooldown).ToString());
+		if (AttackingCooldown <= 0.f)		// time to attack
+		{
+			DecreaseBurstAttackCooldown(DeltaSeconds);	// decrease individual bullet cooldown
+			if (TimeBetweenShots <= 0.f)	// time to fire
 			{
-				if (CalculateBulletsInBurst)	// if we need to find how many bullets for this burst find that number
-				{
-					BulletsInBurst = FMath::RandRange((int32)MinBulletsToFire, (int32)MaxBulletsToFire);
-					CalculateBulletsInBurst = false;
-				}
-				if (BulletsInBurst <= 0)	// if we fired all bullets in burst then reset appropriate values
-				{
-					CalculateBulletsInBurst = true;
-					ResetAttackCooldown();
-					ResetBurstAttackCooldown();
-					// reset back to strafing
-					CurrentAttackState = AttackStates::Strafing;
-					NeedNewAttackingDestination = true;
-				}
-				DecreaseAttackCooldown(DeltaSeconds);	// decrease main attack cooldown
-				//GEngine->AddOnScreenDebugMessage(-1, 0.01f, FColor::Red, FVector(AttackingCooldown).ToString());
-				if (AttackingCooldown <= 0.f)		// time to attack
-				{		
-					DecreaseBurstAttackCooldown(DeltaSeconds);	// decrease individual bullet cooldown
-					if (TimeBetweenShots <= 0.f)	// time to fire
-					{
-						GruntAIFire(CurrentTargetPlayerIndex);	// fire bullet at our current target player
-						ResetBurstAttackCooldown();		// reset our individual bullet cooldown
-						BulletsInBurst -= 1;			// decrement our bullets in burst
-					}
-				}
+				GruntAIFire(CurrentTargetPlayerIndex);	// fire bullet at our current target player
+				ResetBurstAttackCooldown();		// reset our individual bullet cooldown
+				BulletsInBurst -= 1;			// decrement our bullets in burst
 			}
-			break;
-		default:
-			break;
+		}
 	}
 }
 

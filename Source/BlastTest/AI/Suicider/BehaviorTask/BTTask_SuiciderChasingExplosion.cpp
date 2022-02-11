@@ -2,7 +2,7 @@
 
 
 #include "BTTask_SuiciderChasingExplosion.h"
-
+#include "NetworkChar.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -182,7 +182,7 @@ void UBTTask_SuiciderChasingExplosion::SuiciderExplosion() const
 	TArray<ACharacter*> Players = SuiciderEnemy->GetPlayerCharacters();
 	if(Players.Num()>0)
 	{
-		/*if(Players.Num() >1)
+		if(Players.Num() >1)
 		{
 			ACharacter* Player1 = Cast<ACharacter>(Players[0]);
 			ACharacter* Player2 = Cast<ACharacter>(Players[1]);
@@ -194,12 +194,12 @@ void UBTTask_SuiciderChasingExplosion::SuiciderExplosion() const
 				float const Player1Distance =(Player1Location-SuiciderEnemy->GetActorLocation()).Size();
 				float const Player2Distance =(Player2Location-SuiciderEnemy->GetActorLocation()).Size();
 
-				/*if(SuiciderEnemy->GetExplosionRadius() > Player1Distance)
+				if(SuiciderEnemy->GetExplosionRadius() > Player1Distance)
 				{
-					//ANetworkChar* PlayerCharacter =Cast<ANetworkChar>(Player1);
-					//if(PlayerCharacter)
-					//{
-					//	PlayerCharacter->DealDamageToPlayer(SuiciderEnemy->GetDamageAmount());
+					ANetworkChar* PlayerCharacter =Cast<ANetworkChar>(Player1);
+					if(PlayerCharacter)
+					{
+						PlayerCharacter->DealDamageToPlayer(SuiciderEnemy->GetDamageAmount());
 					}
 				}
 
@@ -210,26 +210,26 @@ void UBTTask_SuiciderChasingExplosion::SuiciderExplosion() const
 					{
 						PlayerCharacter->DealDamageToPlayer(SuiciderEnemy->GetDamageAmount());
 					}
-				}#1#
+				}
 			}
-		}*/
-		//else
-		//{
-			//ACharacter* Player =Cast<ACharacter>(Players[0]);
-			//if(Player)
-			//{
-				//FVector const Player1Location = Player->GetActorLocation();
-				//float const Player1Distance =(Player1Location-SuiciderEnemy->GetActorLocation()).Size();
-				// if(SuiciderEnemy->GetExplosionRadius() > Player1Distance)
-				// {
-				// 	ANetworkChar* PlayerCharacter =Cast<ANetworkChar>(Player);
-				// 	if(PlayerCharacter)
-				// 	{
-				// 		PlayerCharacter->DealDamageToPlayer(SuiciderEnemy->GetDamageAmount());
-				// 	}
-				// }
-			//}
-		//}
+		}
+		else
+		{
+			ACharacter* Player =Cast<ACharacter>(Players[0]);
+			if(Player)
+			{
+				FVector const Player1Location = Player->GetActorLocation();
+				float const Player1Distance =(Player1Location-SuiciderEnemy->GetActorLocation()).Size();
+				 if(SuiciderEnemy->GetExplosionRadius() > Player1Distance)
+				 {
+				 	ANetworkChar* PlayerCharacter =Cast<ANetworkChar>(Player);
+				 	if(PlayerCharacter)
+				 	{
+				 		PlayerCharacter->DealDamageToPlayer(SuiciderEnemy->GetDamageAmount());
+				 	}
+				 }
+			}
+		}
 	}
 	SuiciderEnemy->bNeedDestroyed=true;
 }

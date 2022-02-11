@@ -36,9 +36,7 @@ EBTNodeResult::Type UBTTask_GruntFindPatrolPathPoint::ExecuteTask(UBehaviorTreeC
 			int Index = Controller->GetBlackboard()->GetValueAsInt(CurPatrolPathIndex.SelectedKeyName);
 			FVector PatrolPathPoint = GruntAI->GetPatrollingPath()->GetPatrolPoint(Index);
 			PatrolPathPoint = GruntAI->GetPatrollingPath()->GetTransform().TransformPosition(PatrolPathPoint);
-
-			// make sure we set that we are patrolling state
-			GruntAI->SetAttackingState(AGruntAIEnemy::Patrolling);
+			
 			
 			// use the world point to get a navigable point on mesh
 			FNavLocation Loc;

@@ -274,9 +274,6 @@ protected:
 	/**Tolerance for the PlayerFound MoveTo calls in the behavior tree*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Movement Settings", meta = (AllowProtectedAccess = "true"))
 	int PlayerFoundTolerance;
-	/**Cool down used for when a enemy shoots multiple bullets. Amount of time between each shot*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Projectile Settings", meta = (AllowProtectedAccess = "true"))
-	float MultiShotCooldown;
 	/**Range the Enemy can attack in*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Projectile Settings", meta = (AllowProtectedAccess = "true"))
 	float AttackingRange;
