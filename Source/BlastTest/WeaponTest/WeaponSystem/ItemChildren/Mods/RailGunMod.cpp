@@ -112,6 +112,7 @@ void ARailGunMod::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMes
 					GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
 				}
 			}
+			ProjectileParent->OwningPlayer = OwningPlayer;	// let the projectile know what the owning inventory is
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetOwnersName(OwnerName);
