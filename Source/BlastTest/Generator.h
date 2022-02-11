@@ -29,6 +29,10 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool IsActive;
 
+	/**boolean if set true if player can interact with object **/
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	bool CanSetActive;
+
     /**The class the genrator will spawn**/
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> SpawnObject;
@@ -44,9 +48,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetActive(bool ActiveParma);
 
+	/** lets player interact with gen 
+	@param ActiveParma boolean to set the active status of the generator
+	***/
+	UFUNCTION(BlueprintCallable)
+	void SetCanActive(bool ActiveParma);
+	
 	/** spawns the ScoreObject**/
 	UFUNCTION(BlueprintCallable)
 	void SpawnScoreObject();
+	
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

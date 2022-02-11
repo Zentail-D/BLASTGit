@@ -42,8 +42,19 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Spawn Control")
 	TArray<ACharacter*> PlayersInWorld;
 
+	/**Number of generators to spawn in world */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Generator")
+	int GenMaxNum;
+
 	/**the amount of players in all zones*/
 	int32 NumPlayersInZones;
+
+	/**Reference to the Generator class set in blueprint*/
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category="Generator")
+	TSubclassOf<AActor> GenClass;
+
+	/**Array of of refs to the Generators spawned in the Zone*/
+	TArray<AGenerator*> GensInWorld;
 	
 
 protected:
@@ -85,6 +96,6 @@ public:
 	void AddPlayer(ACharacter* NewPlayer);
 
 	/** Spawns generators at the locations of the points from the zones */
-	void SpawnGenrators();
+	void SpawnGenrators(int GenNum);
 
 };
