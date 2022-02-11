@@ -165,4 +165,14 @@ protected:
 	/** The name of the character actor that the inventory is attached to */
 	FString OwnerName;
 
+	/** A pickup sound for when a valid mod gets added to the inventory
+	 *Potential for various different sounds. Only one at the moment.
+	 */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category= "Inventory | Sound Settings")
+	USoundBase* SuccessfulPickupSound;
+
+	/** A pickup sound for when we have a full inventory. */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Inventory | Sound Settings")
+	USoundBase* FailedPickupSound;
+
 };

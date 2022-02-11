@@ -89,12 +89,14 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 					GEngine->AddOnScreenDebugMessage(-1,5.f,FColor::Purple,"No FireSound");
 				}
 			}
+			ProjectileParent->OwningPlayer = OwningPlayer;	// let the projectile know what the owning inventory is
 			ProjectileParent->SetDamageAmount(ProjectileDamage);
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetExplosionRadius(ExplosionRadius);
 			ProjectileParent->SetExplosionStrength(ExplosionStrength);
 			ProjectileParent->SetOwnersName(OwnersName);
 			ProjectileParent->SetInstigator(GetInstigator());
+			
 
 			// Finish spawning actor now
 			UGameplayStatics::FinishSpawningActor(ProjectileParent, MuzzleLocation->GetComponentTransform()+CollisionTransform);
