@@ -135,8 +135,7 @@ public:
 	/**Max amount of enemies allowed to be in this zone at one time*/
 	int32 MaxEnemyCount;
 
-	/**Array of of refs to the Generators spawned in the Zone*/
-	TArray<AGenerator*> GensInZone;
+	
 
 	
 protected:
@@ -162,9 +161,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category="Spawns|Classes")
 	TSubclassOf<class AAIEnemyParent> Grunt;
 
-	/**Reference to the Generator class set in blueprint*/
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category="Generator")
-	TSubclassOf<AActor> GenClass;
+	
 	
 
 	/**Array of references to all the spawners made by this zone*/
@@ -207,9 +204,6 @@ public:
 
 	/**method that sets all of the zones in the Neighbor Array to active*/
 	void SetNeighborsActive();
-
-	/**Spawns Genrators at all given points*/
-	void SpawnGenerator();
 
 private:
 	/**Creates AZoneSpawner at each of the FVectors in the SpawnerLocation Array */

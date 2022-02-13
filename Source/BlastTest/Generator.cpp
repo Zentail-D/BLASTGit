@@ -14,6 +14,7 @@ AGenerator::AGenerator()
 	TimeToGenerate = 10.0;
 	CurrentTime = 0.0;	
 	IsActive = false;
+	CanSetActive = false;
 	SpawnObject = nullptr;
 }
 
@@ -42,8 +43,18 @@ void AGenerator::Tick(float DeltaTime)
 
 void AGenerator::SetActive(bool ActiveParma)
 {
-	IsActive = ActiveParma;
+	if(CanSetActive == true)
+	{
+		IsActive = ActiveParma;
+	}
+	
 }
+
+void AGenerator::SetCanActive(bool ActiveParma)
+{
+	CanSetActive = ActiveParma;
+}
+
 
 void AGenerator::SpawnScoreObject()
 {

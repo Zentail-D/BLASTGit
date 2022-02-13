@@ -15,6 +15,7 @@ AZoneToolCon::AZoneToolCon()
 	MaxEnemyPerWave = 2;
 	MinEnemyPerWave = 1;
 	DespawnAmount = -1;
+	GenMaxNum = 0;
 
 }
 
@@ -40,7 +41,7 @@ void AZoneToolCon::BeginPlay()
 		AssignNeighborZones(i,2);
 	}
 
-	this->SpawnGenrators();
+	this->SpawnGenrators(GenMaxNum);
 }
 
 void AZoneToolCon::SetMaxEnemyCount(int32 NewMaxEnemyCount)
@@ -130,12 +131,33 @@ void AZoneToolCon::AddPlayer(ACharacter* NewPlayer)
 		}
 }
 
-void AZoneToolCon::SpawnGenrators()
+void AZoneToolCon::SpawnGenrators(int GenNum)
 {
+	TArray<FVector> AllGenLocations;
 	for(int i = 0; i <= Zones.Num()-1;i++)
 	{
-		Zones[i]->SpawnGenerator();
+		for(int j = 0; j<= Zones[i]->GenLocations.Num()-1;j++)
+		{
+			AllGenLocations.Add(Zones[i]->GetActorLocation()+Zones[i]->GenLocations[j]);
+		}
 	}
+	if(GenNum <= AllGenLocations.Num())
+	{
+		while(GenNum != 0)
+		{
+			int GenLo = FMath::RandRange(0,AllGenLocations.Num()-1);
+			FVector Location = AllGenLocations[GenLo];
+			AllGenLocations.RemoveAt(GenLo);
+			FActorSpawnParameters SpawnPara;
+			SpawnPara.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			AGenerator* temp = GetWorld()->SpawnActor<AGenerator>(GenClass, Location,FRotator(0,0,0),SpawnPara);
+			temp->SetCanActive(true);//Lets player interact with the generator
+			GensInWorld.Add(temp);
+			GEngine->AddOnScreenDebugMessage(-1,10.0f,FColor::Red,TEXT("Spawn Gen"));
+			GenNum=  GenNum-1;
+		}
+	}
+	
 }
 
 
