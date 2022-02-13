@@ -54,9 +54,5 @@ private:
 	*@warning You have to check if the pointer is null
 	*/
 	AEnemyControllerParent* EnemyController;
-	/**
-	* @return Returns how far from the End Destination Drone is
-	*/
-	float DistanceToFinal() const;
 
 };

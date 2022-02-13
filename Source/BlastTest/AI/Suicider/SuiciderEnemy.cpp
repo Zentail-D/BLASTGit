@@ -19,32 +19,6 @@ void ASuiciderEnemy::Tick(float DeltaTime)
 	}
 }
 
-FVector ASuiciderEnemy::GetDestinationLocation() const
-{
-	return DestinationLocation;
-}
-
-void ASuiciderEnemy::SetDestinationLocation(FVector NewLocation)
-{
-	DestinationLocation=NewLocation;
-}
-
-void ASuiciderEnemy::EmptyDestinationLocation()
-{
-	DestinationLocation =FVector(0);
-}
-
-bool ASuiciderEnemy::CheckDestinationLocation() const
-{
-	if(DestinationLocation == FVector(0))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 int ASuiciderEnemy::GetPatrollingPathIndex() const
 {
@@ -67,12 +41,6 @@ ESuiciderAttackEnums ASuiciderEnemy::GetSuiciderAttackingState()
 {
 	return SuiciderAttackState;
 }
-
-float ASuiciderEnemy::GetPatrolPointRadiusTolerance() const
-{
-	return PatrolPointRadiusTolerance;
-}
-
 
 float ASuiciderEnemy::GetMovingTimer()
 {

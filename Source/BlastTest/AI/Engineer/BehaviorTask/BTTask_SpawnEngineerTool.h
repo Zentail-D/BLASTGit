@@ -89,9 +89,5 @@ private:
 	 */
 	void SpawnRandomTool() const;
 
-	/**
-	* @return Returns how far from the End Destination Drone is
-	*/
-	float DistanceToFinal() const;
 
 };

@@ -74,33 +74,6 @@ void AEngineerEnemy::DestroyChildren()
 	SpawnedEngineerTools.Empty();*/
 }
 
-FVector AEngineerEnemy::GetDestinationLocation() const
-{
-	return DestinationLocation;
-}
-
-void AEngineerEnemy::SetDestinationLocation(FVector NewLocation)
-{
-	DestinationLocation=NewLocation;
-}
-
-void AEngineerEnemy::EmptyDestinationLocation()
-{
-	DestinationLocation =FVector(0);
-}
-
-bool AEngineerEnemy::CheckDestinationLocation() const
-{
-	if(DestinationLocation == FVector(0))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
 int AEngineerEnemy::GetPatrollingPathIndex() const
 {
 	return PatrollingPathIndex;
@@ -146,11 +119,6 @@ APatrollingPath* AEngineerEnemy::GetRandomDronePath()
 AEngineerDroneSwarm* AEngineerEnemy::GetEngineerDroneSwarm() const
 {
 	return DroneSwarm;
-}
-
-float AEngineerEnemy::GetPatrolPointRadiusTolerance() const
-{
-	return PatrolPointRadiusTolerance;
 }
 
 void AEngineerEnemy::AddEngineerToolToArray(AEngineerToolsParent* EngineerTool)
@@ -202,9 +170,3 @@ void AEngineerEnemy::SubtractOneToCurrentNumberOfTurret()
 {
 	CurrentNumberOfTurrets--;
 }
-
-float AEngineerEnemy::GetMovingTimer()
-{
-	return MovingTimer;
-}
-

@@ -22,31 +22,10 @@ public:
 	AEngineerEnemy();
 
 	/**
-	* Boolean on whether or not the suicider is moving
+	* Boolean on whether or not the Engineer is moving
 	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Suicider", meta = (AllowPrivateAccess = "true"))
-	bool bEngineerMoving = true;
-
-	/**
-	* @return Getter for Destination Location
-	*/
-	FVector GetDestinationLocation() const;
-
-	/**
-	* @param NewLocation Setter for the DestinationLocation
-	*/
-	void SetDestinationLocation(FVector NewLocation);
-
-	/**
-	*Set the Destination Location to FVector(0)
-	*/
-	void EmptyDestinationLocation();
-
-	/**
-	* Checks to see if the Destination Vector Is 0
-	* @return True if the destination is 0 and false if it isnt
-	*/
-	bool CheckDestinationLocation() const;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Engineer", meta = (AllowPrivateAccess = "true"))
+	bool bNeedNewPatrolPoint = false;
 
 	/**
 	* @return Returns the patrolling path index getter
@@ -92,11 +71,6 @@ public:
 	 * @return Getter for Engineer Drone Swarm
 	 */
 	AEngineerDroneSwarm* GetEngineerDroneSwarm() const;
-
-	/**
-	* @return Getter for Patrol Point Radius Tolerance
-	*/
-	float GetPatrolPointRadiusTolerance() const;
 
 	/**
 	 * Adds a single engineer tool into the SpawnEngineerTools
@@ -167,24 +141,6 @@ protected:
 	virtual void BeginPlay() override;
 	
 private:
-	/**
-	* Amount of time the enemy has to be sitting still to try and get a new location
-	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Suicider", meta = (AllowPrivateAccess = "true"))
-	float MovingTimer = 2.0f;
-
-	
-	/**
-	 * Location the engineer is try to get to
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Engineer", meta = (AllowPrivateAccess = "true"))
-	FVector DestinationLocation = FVector(0);
-	
-	/**
-	* Nav Volume tolerance
-	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Engineer", meta = (AllowPrivateAccess = "true"))
-	float PatrolPointRadiusTolerance = 200;
 	
 	/**Array for all the engineer tools. It has to be a child of the EngineerToolsParent to be able to add to the array. Add it to this array and it will have a chance to spawn*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Engineer", meta = (AllowPrivateAccess = "true"))

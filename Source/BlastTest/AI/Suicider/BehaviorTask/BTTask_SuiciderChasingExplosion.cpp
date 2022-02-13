@@ -27,7 +27,6 @@ EBTNodeResult::Type UBTTask_SuiciderChasingExplosion::ExecuteTask(UBehaviorTreeC
 				//Empty the Destination so that we find a new when we enter this task and save off the firing cooldown to the blackboard
 				SuiciderEnemy->GetCharacterMovement()->MaxWalkSpeed=SuiciderEnemy->GetMovementSpeed();
 				EnemyController->GetBlackboard()->SetValueAsFloat(AttackingCooldown.SelectedKeyName,SuiciderEnemy->GetAttackingCooldown());
-				SuiciderEnemy->EmptyDestinationLocation();
 				EnemyController->MoveToActor(SuiciderEnemy->GetPlayerCharacters()[PlayerIndex]);
 				return EBTNodeResult::Type::InProgress;
 			}

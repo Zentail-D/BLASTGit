@@ -36,27 +36,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/**
-	* @return Getter for Destination Location
-	*/
-	FVector GetDestinationLocation() const;
-
-	/**
-	* @param NewLocation Setter for the DestinationLocation
-	*/
-	void SetDestinationLocation(FVector NewLocation);
-
-	/**
-	*Set the Destination Location to FVector(0)
-	*/
-	void EmptyDestinationLocation();
-
-	/**
-	* Checks to see if the Destination Vector Is 0
-	* @return True if the destination is 0 and false if it isnt
-	*/
-	bool CheckDestinationLocation() const;
-
-	/**
 	* @return Returns the patrolling path index getter
 	*/
 	int GetPatrollingPathIndex() const;
@@ -82,13 +61,6 @@ public:
 	bool bNeedDestroyed = false;
 
 	/**
-	* @return Getter for Patrol Point Radius Tolerance
-	*/
-	float GetPatrolPointRadiusTolerance() const;
-
-	
-
-	/**
 	* @return Getter for MovingTimer
 	*/
 	float GetMovingTimer();
@@ -96,11 +68,6 @@ public:
 
 	
 private:
-	/**
-	* Nav Volume tolerance
-	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Suicider", meta = (AllowPrivateAccess = "true"))
-	float PatrolPointRadiusTolerance = 200;
 	
 	/**
 	* Amount of time the enemy has to be sitting still to try and get a new location
@@ -108,19 +75,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Suicider", meta = (AllowPrivateAccess = "true"))
 	float MovingTimer = 2.0f;
 
-	
-	
-	/**
-	 * Location the Suicider is try to get to
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Suicider", meta = (AllowPrivateAccess = "true"))
-	FVector DestinationLocation = FVector(0);
-
 	/**
 	 * Radius after the slime blows up that will be affected by the slime
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Suicider", meta = (AllowPrivateAccess = "true"))
-	float ExplosionRadius;
+	float ExplosionRadius = 300;
 	
 	/**
 	 * Suicider Attack Enum to determine what type of attacks it will have

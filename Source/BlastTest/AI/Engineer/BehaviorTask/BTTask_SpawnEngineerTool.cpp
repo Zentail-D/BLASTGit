@@ -26,7 +26,6 @@ EBTNodeResult::Type UBTTask_SpawnEngineerTool::ExecuteTask(UBehaviorTreeComponen
 		{
 			EnemyController->GetBlackboard()->SetValueAsFloat(FiringCooldown.SelectedKeyName,Engineer->GetAttackingCooldown());
 			EnemyController->GetBlackboard()->SetValueAsFloat(SpawningTimer.SelectedKeyName,Engineer->GetSpawningTimer());
-			Engineer->EmptyDestinationLocation();
 		}
 		return EBTNodeResult::Type::InProgress;
 	}
@@ -53,12 +52,11 @@ void UBTTask_SpawnEngineerTool::TickTask(UBehaviorTreeComponent& OwnerComp, uint
 				{
 					EnemyController->StopMovement();
 					SpawnRandomTool();
-					Engineer->EmptyDestinationLocation();
 					FinishLatentTask(OwnerComp,EBTNodeResult::Succeeded);
 				}
 				EnemyController->GetBlackboard()->SetValueAsFloat(FiringCooldown.SelectedKeyName,SpawnCooldown);
 				//Move Around Randomly until we spawn in a tool
-				if(Engineer->CheckDestinationLocation())
+				if (EnemyController->GetPathFollowingComponent()->DidMoveReachGoal())
 				{
 					FVector const FinalLocation = Engineer->GetActorLocation();
 					Engineer->GetCharacterMovement()->MaxWalkSpeed=Engineer->GetMovementSpeed();
@@ -75,21 +73,15 @@ void UBTTask_SpawnEngineerTool::TickTask(UBehaviorTreeComponent& OwnerComp, uint
 						FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 					}
 					FNavLocation Loc;
-					if (NavSys->GetRandomPointInNavigableRadius(DesiredLocation, Engineer->GetPatrolPointRadiusTolerance(), Loc, nullptr))
+					if (NavSys->GetRandomPointInNavigableRadius(DesiredLocation, Engineer->GetMoveToTolerance(), Loc, nullptr))
 					{
 						EnemyController->MoveToLocation(Loc.Location,-1);
-						Engineer->SetDestinationLocation(Loc.Location);
 					}
 				}
 			
 				if (EnemyController == nullptr || Engineer == nullptr)
 				{
 					FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-				}
-				//Checking to see if we are within the tolerance of end distance
-				if(DistanceToFinal()<= Engineer->GetMoveToTolerance())
-				{
-					Engineer->EmptyDestinationLocation();
 				}
 			}
 			EnemyController->GetBlackboard()->SetValueAsFloat(SpawningTimer.SelectedKeyName,SpawningStartTimer);
@@ -112,6 +104,7 @@ void UBTTask_SpawnEngineerTool::SpawnRandomTool() const
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = Engineer;
 	SpawnParams.Instigator = Engineer->GetInstigator();
+	Engineer->bNeedNewPatrolPoint=true;
 		
 	if(!CheckCollision(SpawningLocation))
 	{
@@ -151,9 +144,4 @@ void UBTTask_SpawnEngineerTool::SpawnRandomTool() const
 		
 		}
 	}
-}
-
-float UBTTask_SpawnEngineerTool::DistanceToFinal() const
-{
-	return (Engineer->GetActorLocation()-Engineer->GetDestinationLocation()).Size();
 }

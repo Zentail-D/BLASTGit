@@ -14,15 +14,6 @@ UBTTask_EngineerMoveRandomly::UBTTask_EngineerMoveRandomly(FObjectInitializer co
 
 EBTNodeResult::Type UBTTask_EngineerMoveRandomly::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	EnemyController = Cast<AEnemyControllerParent>(OwnerComp.GetAIOwner());
-	if(EnemyController)
-	{
-		Engineer = Cast<AEngineerEnemy>(EnemyController->GetPawn());
-		if(Engineer)
-		{
-			Engineer->EmptyDestinationLocation();
-		}
-	}
 	return EBTNodeResult::Type::InProgress;
 }
 
@@ -35,7 +26,7 @@ void UBTTask_EngineerMoveRandomly::TickTask(UBehaviorTreeComponent& OwnerComp, u
 		if(Engineer)
 		{
 			//Move around randomly for the engineer
-			if(Engineer->CheckDestinationLocation())
+			if (EnemyController->GetPathFollowingComponent()->DidMoveReachGoal())
 			{
 				FVector const FinalLocation = Engineer->GetActorLocation();
 				float const X = FMath::FRandRange(-1,1);
@@ -51,11 +42,10 @@ void UBTTask_EngineerMoveRandomly::TickTask(UBehaviorTreeComponent& OwnerComp, u
 					FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 				}
 				FNavLocation Loc;
-				if (NavSys->GetRandomPointInNavigableRadius(DesiredLocation, Engineer->GetPatrolPointRadiusTolerance(), Loc, nullptr))
+				if (NavSys->GetRandomPointInNavigableRadius(DesiredLocation, Engineer->GetMoveToTolerance(), Loc, nullptr))
 				{
 					Engineer->GetCharacterMovement()->MaxWalkSpeed=Engineer->GetMovementSpeed();
 					EnemyController->MoveToLocation(Loc.Location,-1);
-					Engineer->SetDestinationLocation(Loc.Location);
 				}
 				
 			}
@@ -64,16 +54,7 @@ void UBTTask_EngineerMoveRandomly::TickTask(UBehaviorTreeComponent& OwnerComp, u
 			{
 				FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 			}
-			//Checking to see if we are within the tolerance of end distance
-			if(DistanceToFinal()<= Engineer->GetMoveToTolerance())
-			{
-				Engineer->EmptyDestinationLocation();
-			}
 		}
 	}
 }
 
-float UBTTask_EngineerMoveRandomly::DistanceToFinal() const
-{
-	return (Engineer->GetActorLocation()-Engineer->GetDestinationLocation()).Size();
-}

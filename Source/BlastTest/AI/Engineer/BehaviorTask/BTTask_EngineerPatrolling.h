@@ -36,11 +36,7 @@ public:
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
     
 private:
-	/**Blackboard key to set the character index to rotate towards*/
-	UPROPERTY(EditAnywhere, Category = Blackboard, meta = (AllowPrivateAccess = "true"))
-	struct FBlackboardKeySelector NotMovingTimer;
 
-	
 	/**
 	* Saved off reference to the Engineer to ensure that we dont have to do multiple casts
 	*@warning You have to check if the pointer is null
@@ -57,8 +53,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Blackboard, meta = (AllowPrivateAccess = "true"))
 	int OffsetFromPatrolPoint = 100;
 
-	/**
-	* @return Returns how far from the End Destination Engineer is
+	/**Internal Function to get the Engineer to move to a patrolling point with a offset so that they are not heading to the exact same location
+	* @return False if we failed at finding the point true if we succeed
 	*/
-	float DistanceToFinal() const;
+	bool MoveToPatrollingPoint() const;
+
 };
