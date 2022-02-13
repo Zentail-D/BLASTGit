@@ -53,17 +53,6 @@ public:
 	/** Gives the Patrol point radius tolerance */
 	inline float GetPatrolPointRadiusTolerance() const { return MoveToTolerance; }
 
-	
-	
-	/** Gives the StrafeSharpnessAngle */
-	inline float GetApproachSharpnessAngle() const { return ApproachSharpnessAngle; }
-
-	/** Returns the angle that represents the variation in where the player will move to once the strafe direction is determined */
-	inline float GetApproachVariationAngle() const { return ApproachVariationAngle; }
-
-	/** returns the distance between each zig zag approach point */
-	inline float GetApproachDistance() const { return ApproachDistance; }
-
 	/** Returns the strafing sharpness angle */
 	inline float GetStrafingSharpnessAngle() const { return StrafingSharpnessAngle; }
 
@@ -118,18 +107,6 @@ protected:
 	/** How many points will be created between the end goal and the start for the grunt when strafing*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true", ClampMin=2))
 	int StrafingSubsection = 3;
-
-	/** Angle that determines how sharp the strafe will be (how hard the enemy turns) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
-	float ApproachSharpnessAngle = 45.0f;
-
-	/** Angle that the slight variation in where the player moves to once its strafe direction is found */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
-	float ApproachVariationAngle = 10.0f;
-
-	/** The distance for each move to while approaching */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))
-	float ApproachDistance = 175.0f;
 	
 	/** Same as strafe sharpness angle but for strafing */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Grunt Settings | Attack Settings", meta = (AllowProtectedAccess = "true"))

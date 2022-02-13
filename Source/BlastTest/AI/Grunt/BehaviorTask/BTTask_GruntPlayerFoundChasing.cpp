@@ -61,7 +61,7 @@ void UBTTask_GruntPlayerFoundChasing::TickTask(UBehaviorTreeComponent& OwnerComp
 					// pretty much all shooting will be handled in Enemies/Grunt/GruntAIEnemy.cpp Tick method
 					// this is so that we can get a better more consistent delta time each frame to decrease timers
 					ACharacter* TargetPlayer = GruntAI->GetPlayerCharacters()[GruntAI->GetCurrentTargetPlayerIndex()];
-					FVector VectorToPlayer = TargetPlayer->GetActorLocation() - GruntAI->GetActorLocation();
+					const FVector VectorToPlayer = TargetPlayer->GetActorLocation() - GruntAI->GetActorLocation();
 					const FRotator Rotator = VectorToPlayer.Rotation();
 					GruntAI->SetActorRotation(Rotator);
 				}
@@ -161,8 +161,8 @@ bool UBTTask_GruntPlayerFoundChasing::MoveToLocation(AGruntAIEnemy* GruntAI, AEn
 			FVector VectorToPlayer =  TargetPlayer->GetActorLocation() - GruntAI->GetActorLocation();
 			
 			// get our needed variables for calculations
-			const float VariationAngle = GruntAI->GetApproachVariationAngle();
-			const float SharpnessAngle = GruntAI->GetApproachSharpnessAngle();
+			const float VariationAngle = GruntAI->GetStrafingVariationAngle();
+			const float SharpnessAngle = GruntAI->GetStrafingSharpnessAngle();
 			const float DistanceBetweenStrafes = GruntAI->GetStrafingDistance();
 
 			VectorToPlayer =VectorToPlayer.GetSafeNormal();
@@ -213,7 +213,7 @@ bool UBTTask_GruntPlayerFoundChasing::MoveToLocation(AGruntAIEnemy* GruntAI, AEn
 	
 }
 
-void UBTTask_GruntPlayerFoundChasing::CreatePath(AGruntAIEnemy* GruntAI, FVector EndLocation) const
+void UBTTask_GruntPlayerFoundChasing::CreatePath(AGruntAIEnemy* GruntAI, const FVector EndLocation)
 {
 	const int GruntSubSection = GruntAI->GetStrafingSubsection();
 	const float PercentageSubSection = 1 / static_cast<float>(GruntSubSection);

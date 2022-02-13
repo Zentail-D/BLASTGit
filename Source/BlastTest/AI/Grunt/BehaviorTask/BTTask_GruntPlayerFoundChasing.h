@@ -53,7 +53,7 @@ private:
 	 * @param GruntAI used to get a reference to the grunts stats so that we can set the strafing path and create the points leading up to the EndLocation
 	 * @param EndLocation The location that the grunt is attempting to go towards
 	 */
-	void CreatePath(AGruntAIEnemy* GruntAI, FVector EndLocation) const;
+	static void CreatePath(AGruntAIEnemy* GruntAI, FVector EndLocation);
 	
 };
 
