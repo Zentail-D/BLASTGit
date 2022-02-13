@@ -126,10 +126,7 @@ public:
 	*/
 	void SubtractOneToCurrentNumberOfTurret();
 
-	/**
-	* @return Getter for MovingTimer
-	*/
-	float GetMovingTimer();
+	inline int GetDistanceFromPlayer() const {return DistanceFromPlayer;}
 
 	
 protected:
@@ -145,6 +142,10 @@ private:
 	/**Array for all the engineer tools. It has to be a child of the EngineerToolsParent to be able to add to the array. Add it to this array and it will have a chance to spawn*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Engineer", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<AEngineerToolsParent>> EngineerTools;
+
+	/**The Distance that the engineer will attempt to keep from the player when the engineer sees the player*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Settings | Engineer", meta = (AllowPrivateAccess = "true"))
+	int DistanceFromPlayer = 1500;
 
 	/**
 	 * The Swarm that all the drone that are created are added to

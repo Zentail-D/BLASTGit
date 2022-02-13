@@ -55,4 +55,16 @@ private:
 	*/
 	AEnemyControllerParent* EnemyController;
 
+	/**
+	* Helper function for  Find Location Near Player
+	* @return return the player index for the player we want to find a location near
+	*/
+	int FindClosestPlayer() const;
+
+	/**
+	 * Move to location near player using the internal engineer variable to know what distance to keep from the player
+	 * @returns true if successful and false if it was unsuccessful
+	 */
+	bool MoveToLocationNearPlayer() const;
+
 };
