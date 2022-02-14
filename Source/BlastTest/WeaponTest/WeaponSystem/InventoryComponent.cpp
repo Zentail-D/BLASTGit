@@ -34,25 +34,47 @@ void UInventoryComponent::PickupItem(AItemParent* ItemToPickup)
 
 void UInventoryComponent::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
+
+	
 	//switch statement to handle which mod slot we actually have active right now
 	switch(ActiveModSlot)
 	{
 		case EModSlots::Ve_DEFAULT:	// if default mod is active then fire default mod
 			{
-				if (DefaultMod)
+				// if not dedicated server and less than the server aka the local machine then do the visuals
+				if (GetNetMode() != NM_DedicatedServer && GetOwner()->GetInstigator()->GetLocalRole() < ROLE_Authority)
+				{
+					//DefaultMod->SimulateWeaponFire();	// visual fx aka local only operations
+				}
+				// if we player valid and is locally controlled then call our fire mod
+				if (GetOwner()->GetInstigator() && GetOwner()->GetInstigator()->IsLocallyControlled() && DefaultMod)
+				{
 					DefaultMod->FireActiveMod(CameraComponent,MuzzleLocation);
+				}
 				break;
 			}
 		case EModSlots::Ve_SLOT1:	// if slot 1 mod is active then fire default mod
 			{
-				if (ModSlot1)
-					ModSlot1->FireActiveMod(CameraComponent,MuzzleLocation);
+				if (GetNetMode() != NM_DedicatedServer && GetOwner()->GetInstigator()->GetLocalRole() < ROLE_Authority)
+				{
+					//DefaultMod->SimulateWeaponFire();	// visual fx aka local only operations
+				}
+				if (GetOwner()->GetInstigator() && GetOwner()->GetInstigator()->IsLocallyControlled() && DefaultMod)
+				{
+					ModSlot1->FireActiveMod(CameraComponent, MuzzleLocation);
+				}
 				break;
 			}
 		case EModSlots::Ve_SLOT2:	// if slot 2 mod is active then fire default mod
 			{
-				if (ModSlot2)
-					ModSlot2->FireActiveMod(CameraComponent,MuzzleLocation);
+				if (GetNetMode() != NM_DedicatedServer && GetOwner()->GetInstigator()->GetLocalRole() < ROLE_Authority)
+				{
+					//DefaultMod->SimulateWeaponFire();	// visual fx aka local only operations
+				}
+				if (GetOwner()->GetInstigator() && GetOwner()->GetInstigator()->IsLocallyControlled() && DefaultMod)
+				{
+					ModSlot2->FireActiveMod(CameraComponent, MuzzleLocation);
+				}
 				break;
 			}
 		default:
@@ -60,6 +82,16 @@ void UInventoryComponent::FireActiveMod(UCameraComponent* CameraComponent, UStat
 				break;
 			}
 	}
+}
+
+void UInventoryComponent::ServerFireActiveMod_Implementation(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
+{
+	FireActiveMod(CameraComponent, MuzzleLocation);
+}
+
+bool UInventoryComponent::ServerFireActiveMod_Validate(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
+{
+	return true;
 }
 
 void UInventoryComponent::ActiveModReleased(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
@@ -99,6 +131,26 @@ void UInventoryComponent::ActiveModReleased(UCameraComponent* CameraComponent, U
 
 	// update active mod after fire is released
 	UpdateActiveMod();
+}
+
+void UInventoryComponent::StartModFire(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
+{
+	if (Cast<ANetworkChar>(GetOwner()->GetInstigator())->GetLocalRole() < ROLE_Authority)
+	{
+		ServerStartModFire(CameraComponent, MuzzleLocation);	// if we are the client then run on server too
+	}
+
+	FireActiveMod(CameraComponent, MuzzleLocation);
+}
+
+void UInventoryComponent::ServerStartModFire_Implementation(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
+{
+	StartModFire(CameraComponent, MuzzleLocation);
+}
+
+bool UInventoryComponent::ServerStartModFire_Validate(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
+{
+	return true;
 }
 
 void UInventoryComponent::SwapWeapons()

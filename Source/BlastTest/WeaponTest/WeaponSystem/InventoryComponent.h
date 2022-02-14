@@ -44,7 +44,11 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation);
-
+	
+	/** Responsible for allowing the local to run the fire mode on the server */
+	UFUNCTION(reliable, server, WithValidation)
+	void ServerFireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation);
+	
 	/** calls the active mods released method (important for things like the rail gun
 	 * @param CameraComponent - reference to the players camera component to get info out of for mods
 	 * @param MuzzleLocation - the muzzle location of the players weapon
@@ -52,6 +56,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ActiveModReleased(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation);
 
+	/** function called by the player to when wanting to fire to get the ball rolling on shooting
+	 * @param CameraComponent - players camera
+	 * @param MuzzleLocation - players muzzle location
+	 */
+	UFUNCTION(BlueprintCallable)
+	void StartModFire(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation);
+
+	/** Responsible for allowing the local to run the Start Mod Fire on the server */
+	UFUNCTION(reliable, server, WithValidation)
+	void ServerStartModFire(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation);
+	
 	/** Called when the player wants to switch between mods
 	 * @return - The new active mod slot (NOTE: this can still be the old active mod slot aka the player had nothing to swap to)
 	*/
