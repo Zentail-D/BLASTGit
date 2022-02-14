@@ -53,13 +53,9 @@ void AShotgunMod::Tick(float DeltaTime)
 	}
 }
 
-void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName)
+void AShotgunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
-	// if not initialized then set who our owner is for this instance of the mod
-	if (OwnerName == "None")
-	{
-		OwnerName = OwnersName;
-	}
+
 	
 	if(bReadyToFire)
 	{

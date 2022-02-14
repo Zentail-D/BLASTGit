@@ -26,11 +26,17 @@ public:
 	/**
 	 * @param CameraComponent - Reference to the owning players camera component
 	 * @param MuzzleLocation Location that the actual VFX will play from
-	 * @param OwnersName - String of the owning character actors name
 	 * Needs to be override to allow for the implementation of different effects when a fire function is called for separate mods
 	 */
-	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName);
+	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation);
 
+	/**
+	 * @param Location
+	 * @param CollisionTransform
+	 * @param Direction
+	 *spawn projectile on server */
+	//UFUNCTION(reliable, server, WithValidation)
+	virtual void ServerFireProjectile(FVector Location,FTransform CollisionTransform,FVector Direction);
 	/**Inventory checks this boolean to see if the mod needs to be destroyed*/
 	bool bReadyToDestroy = false;
 	/**

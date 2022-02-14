@@ -24,7 +24,7 @@ class AFlameThrowerMod : public AModParent
 	 * @param MuzzleLocation location of where the VFX is played from.
 	 * @param OwnersName - String of the owning character actors name
 	 */
-	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName) override;
+	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation) override;
 	
 	/**
 	* Plays VFX in the direction the cameras facing

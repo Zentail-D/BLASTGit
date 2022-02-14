@@ -21,7 +21,7 @@ class ARailGunMod : public AModParent
 	* @param MuzzleLocation - Location that the actual VFX will play from
 	* Needs to be override to allow for the implementation of different effects when a fire function is called for separate mods
 	*/
-	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName) override;
+	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation) override;
 	/**
 	* @param CameraComponent - The camera component of the player holding the inventory
 	* @param MuzzleLocation - Location that the actual VFX will play from

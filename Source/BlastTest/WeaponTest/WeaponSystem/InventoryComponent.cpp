@@ -40,19 +40,19 @@ void UInventoryComponent::FireActiveMod(UCameraComponent* CameraComponent, UStat
 		case EModSlots::Ve_DEFAULT:	// if default mod is active then fire default mod
 			{
 				if (DefaultMod)
-					DefaultMod->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
+					DefaultMod->FireActiveMod(CameraComponent,MuzzleLocation);
 				break;
 			}
 		case EModSlots::Ve_SLOT1:	// if slot 1 mod is active then fire default mod
 			{
 				if (ModSlot1)
-					ModSlot1->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
+					ModSlot1->FireActiveMod(CameraComponent,MuzzleLocation);
 				break;
 			}
 		case EModSlots::Ve_SLOT2:	// if slot 2 mod is active then fire default mod
 			{
 				if (ModSlot2)
-					ModSlot2->FireActiveMod(CameraComponent,MuzzleLocation, OwnerName);
+					ModSlot2->FireActiveMod(CameraComponent,MuzzleLocation);
 				break;
 			}
 		default:

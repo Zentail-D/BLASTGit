@@ -25,7 +25,7 @@ class AShotgunMod : public AModParent
 	 * @param CameraComponent direction and location the camera is facing
 	 * @param MuzzleLocation location of where the VFX is played from.
 	 */
-    virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName) override;
+    virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation) override;
 
 	/** Returns the name of the move for the user interface
 	* @return - the name of the mod that will appear in the player's UI

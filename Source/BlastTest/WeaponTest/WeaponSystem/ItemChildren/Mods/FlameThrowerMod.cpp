@@ -18,8 +18,7 @@ AFlameThrowerMod::AFlameThrowerMod()
 	
 }
 
-void AFlameThrowerMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation,
-	FString OwnersName)
+void AFlameThrowerMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
 	//Super::FireActiveMod(CameraComponent, MuzzleLocation, OwnersName);
 	/*** Set VFX to run

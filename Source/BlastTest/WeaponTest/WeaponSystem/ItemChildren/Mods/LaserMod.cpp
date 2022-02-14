@@ -120,13 +120,10 @@ void ALaserMod::Tick(float DeltaTime)
 	}
 }
 
-void ALaserMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName)
+void ALaserMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
 	// if not initialized then set who our owner is for this instance of the mod
-	if (OwnerName == "None")
-	{
-		OwnerName = OwnersName;
-	}
+	
 	
 	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{

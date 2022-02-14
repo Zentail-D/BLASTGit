@@ -22,8 +22,14 @@ class ADefaultAmmo : public AModParent
 	 * @param CameraComponent direction and location the camera is facing
 	 * @param MuzzleLocation location of where the VFX is played from.
 	 */
-	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName) override;
-
+	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation ) override;
+	/**
+	* @param Location
+	* @param CollisionTransform
+	* @param Direction
+	*spawn projectile on server */
+	UFUNCTION(reliable, server, WithValidation)
+	virtual void ServerFireProjectile(FVector Location, FTransform CollisionTransform,FVector Direction) override;
 	/** Returns the name of the move for the user interface
 	* @return - the name of the mod that will appear in the player's UI
 	*/

@@ -52,14 +52,8 @@ void ARocketLauncherMod::Tick(float DeltaTime)
 	}
 }
 
-void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName)
+void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
-	// if not initialized then set who our owner is for this instance of the mod
-	if (OwnerName == "None")
-	{
-		OwnerName = OwnersName;
-	}
-	
 	if(bReadyToFire)
 	{
 		bReadyToFire = false;
@@ -94,7 +88,7 @@ void ARocketLauncherMod::FireActiveMod(UCameraComponent* CameraComponent, UStati
 			ProjectileParent->SetImpulsePower(ProjectileImpulse);
 			ProjectileParent->SetExplosionRadius(ExplosionRadius);
 			ProjectileParent->SetExplosionStrength(ExplosionStrength);
-			ProjectileParent->SetOwnersName(OwnersName);
+			
 			ProjectileParent->SetInstigator(GetInstigator());
 			
 

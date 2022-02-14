@@ -41,7 +41,7 @@ public:
 	* @param CameraComponent direction and location the camera is facing
 	* @param MuzzleLocation location of where the VFX is played from.
 	*/
-	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName) override;
+	virtual void FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation) override;
 
 	/**
 	* Plays VFX in the direction the cameras facing

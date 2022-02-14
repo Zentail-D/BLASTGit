@@ -19,10 +19,25 @@ AModParent::AModParent()
 	
 }
 
-void AModParent::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName)
+void AModParent::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
 	
 }
+
+void AModParent::ServerFireProjectile(FVector Location, FTransform CollisionTransform, FVector Direction)
+{
+}
+/*
+bool AModParent::ServerFireProjectile_Validate(FVector Location, FTransform CollisionTransform, FVector Direction)
+{
+	return true;
+}
+
+void AModParent::ServerFireProjectile_Implementation(FVector Location, FTransform CollisionTransform, FVector Direction)
+{
+}*/
+
+
 
 void AModParent::ActiveModRelease(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {

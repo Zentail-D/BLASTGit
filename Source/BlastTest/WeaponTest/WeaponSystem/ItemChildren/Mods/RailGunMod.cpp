@@ -55,13 +55,9 @@ void ARailGunMod::Tick(float DeltaTime)
 	}
 }
 
-void ARailGunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation, FString OwnersName)
+void ARailGunMod::FireActiveMod(UCameraComponent* CameraComponent, UStaticMeshComponent* MuzzleLocation)
 {
-	// if not initialized then set who our owner is for this instance of the mod
-	if (OwnerName == "None")
-	{
-		OwnerName = OwnersName;
-	}
+	
 	if(Cast<ANetworkChar>(GetInstigator())->AudioComponent)
 	{
 		if(FireSound)
