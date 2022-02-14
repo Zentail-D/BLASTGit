@@ -141,23 +141,22 @@ void AZoneToolCon::SpawnGenrators(int GenNum)
 			AllGenLocations.Add(Zones[i]->GetActorLocation()+Zones[i]->GenLocations[j]);
 		}
 	}
-	if(GenNum <= AllGenLocations.Num())
+	if(GenNum > AllGenLocations.Num())
 	{
-		while(GenNum != 0)
-		{
-			int GenLo = FMath::RandRange(0,AllGenLocations.Num()-1);
-			FVector Location = AllGenLocations[GenLo];
-			AllGenLocations.RemoveAt(GenLo);
-			FActorSpawnParameters SpawnPara;
-			SpawnPara.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			AGenerator* temp = GetWorld()->SpawnActor<AGenerator>(GenClass, Location,FRotator(0,0,0),SpawnPara);
-			temp->SetCanActive(true);//Lets player interact with the generator
-			GensInWorld.Add(temp);
-			GEngine->AddOnScreenDebugMessage(-1,10.0f,FColor::Red,TEXT("Spawn Gen"));
-			GenNum=  GenNum-1;
-		}
+		GenNum = AllGenLocations.Num();
 	}
-	
+	while(GenNum != 0)
+	{
+		int GenLo = FMath::RandRange(0,AllGenLocations.Num()-1);
+		FVector Location = AllGenLocations[GenLo];
+		AllGenLocations.RemoveAt(GenLo);
+		FActorSpawnParameters SpawnPara;
+		SpawnPara.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AGenerator* temp = GetWorld()->SpawnActor<AGenerator>(GenClass, Location,FRotator(0,0,0),SpawnPara);
+		temp->SetCanActive(true);//Lets player interact with the generator
+		GensInWorld.Add(temp);
+		GenNum =  GenNum-1;
+	}
 }
 
 
